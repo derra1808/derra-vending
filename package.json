@@ -1,0 +1,50 @@
+{
+  "name": "derra-vending",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "dev:clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next dev",
+    "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\"",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "qr": "node qr/generate.js",
+    "check:formation": "node scripts/check-formation-setup.mjs",
+    "generate:ebook": "tsx scripts/generate-ebook-pdf.ts",
+    "generate:bonuses": "tsx scripts/generate-bonuses.ts",
+    "generate:formation": "npm run generate:ebook && npm run generate:bonuses",
+    "sync:ebook": "tsx scripts/sync-ebook-pdf.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.111.0",
+    "@upstash/redis": "^1.38.0",
+    "@vercel/blob": "^2.6.1",
+    "@vercel/kv": "^3.0.0",
+    "framer-motion": "^11.18.2",
+    "lucide-react": "^0.469.0",
+    "next": "^15.1.6",
+    "pdfkit": "^0.19.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "stripe": "^22.3.2"
+  },
+  "devDependencies": {
+    "@shotstack/cli": "^0.8.0",
+    "@types/node": "^22.10.5",
+    "@types/pdfkit": "^0.17.6",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.1.6",
+    "postcss": "^8.4.49",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.2",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.1",
+    "typescript": "^5.7.2"
+  }
+}

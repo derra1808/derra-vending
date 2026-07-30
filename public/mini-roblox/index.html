@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Sandbox — Explore & Construis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="hud">
+    <div class="hud-top">
+      <div class="brand">🧱 Mini Sandbox</div>
+      <div class="stats"><span id="blockCount">0</span> blocs posés</div>
+    </div>
+    <div class="crosshair">+</div>
+    <div class="hotbar" id="hotbar"></div>
+    <div class="help" id="help">
+      <h2>Mini Sandbox</h2>
+      <p>Explore la map et construis comme sur Roblox.</p>
+      <ul>
+        <li><kbd>Z Q S D</kbd> ou <kbd>W A S D</kbd> — se déplacer</li>
+        <li><kbd>Espace</kbd> — sauter</li>
+        <li><kbd>Souris</kbd> — regarder autour</li>
+        <li><kbd>Clic gauche</kbd> — poser un bloc</li>
+        <li><kbd>Clic droit</kbd> — supprimer</li>
+        <li><kbd>1-6</kbd> — choisir la couleur</li>
+        <li><kbd>R</kbd> — tourner le bloc</li>
+      </ul>
+      <button id="btnPlay">Entrer dans le jeu</button>
+      <p class="local-tip">Problème avec le lien ? Ouvre le fichier local ou lance <code>jouer.bat</code></p>
+    </div>
+    <div class="error-panel hidden" id="errorPanel">
+      <h2>Impossible de charger le jeu</h2>
+      <p id="errorMsg"></p>
+      <p class="local-tip">Essaie : double-clic sur <strong>jouer.bat</strong> dans le dossier mini-roblox</p>
+    </div>
+    <div class="toast hidden" id="toast"></div>
+  </div>
+  <canvas id="canvas"></canvas>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module">
+    import("./game.js").catch((e) => {
+      document.getElementById("help")?.classList.add("hidden");
+      document.getElementById("errorPanel")?.classList.remove("hidden");
+      const el = document.getElementById("errorMsg");
+      if (el) el.textContent = e.message || String(e);
+      console.error(e);
+    });
+  </script>
+</body>
+</html>

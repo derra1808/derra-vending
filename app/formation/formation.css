@@ -1,0 +1,427 @@
+/* ═══════════════════════════════════════════════════════════
+   DERRA VENDING — Charte stricte (palette officielle)
+   #1A1A2E · #C8A24A · #F4F1E8 · #444444
+   L'or = boutons, titres clés, chiffres clés — avec parcimonie
+   ═══════════════════════════════════════════════════════════ */
+
+.formation-theme {
+  --d-night: #1a1a2e;
+  --d-gold: #c8a24a;
+  --d-cream: #f4f1e8;
+  --d-text: #444444;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  background-color: var(--d-night);
+  color: var(--d-cream);
+}
+
+/* ── Sections (bleu nuit / crème uniquement) ── */
+.section-night {
+  background-color: var(--d-night);
+  color: var(--d-cream);
+}
+
+.section-cream {
+  background-color: var(--d-cream);
+  color: var(--d-text);
+}
+
+/* ── Typographie ── */
+.formation-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--d-gold);
+}
+
+.formation-title {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.section-night .formation-title {
+  color: var(--d-cream);
+}
+
+.section-cream .formation-title {
+  color: var(--d-night);
+}
+
+.formation-body {
+  line-height: 1.75;
+}
+
+.section-night .formation-body {
+  color: var(--d-cream);
+  opacity: 0.85;
+}
+
+.section-cream .formation-body {
+  color: var(--d-text);
+  opacity: 1;
+}
+
+/* Or = accent rare (chiffres clés, sous-titres importants) */
+.formation-accent,
+.formation-key {
+  color: var(--d-gold);
+}
+
+.formation-line {
+  height: 1px;
+  background: var(--d-gold);
+  opacity: 0.4;
+}
+
+/* ── Bouton or sur fond bleu nuit (ACCÉDER) ── */
+.formation-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--d-night);
+  background-color: var(--d-gold);
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.formation-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.section-night .formation-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--d-cream);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--d-cream) 35%, transparent);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.section-night .formation-btn-ghost:hover {
+  border-color: var(--d-gold);
+  color: var(--d-gold);
+}
+
+.section-cream .formation-btn-ghost,
+.formation-btn-ghost-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--d-night);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--d-night) 25%, transparent);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.section-cream .formation-btn-ghost:hover,
+.formation-btn-ghost-dark:hover {
+  border-color: var(--d-gold);
+  color: var(--d-gold);
+}
+
+/* ── Encadré type « L'ASTUCE » — crème, titre or, texte gris ── */
+.formation-tip {
+  background-color: var(--d-cream);
+  color: var(--d-text);
+  border: 1px solid color-mix(in srgb, var(--d-gold) 45%, transparent);
+  padding: 1.75rem 2rem;
+}
+
+.formation-tip .formation-label {
+  margin-bottom: 0.75rem;
+}
+
+.formation-tip .formation-title {
+  color: var(--d-gold);
+  font-size: 1.35rem;
+}
+
+.formation-tip .formation-body {
+  color: var(--d-text);
+  opacity: 1;
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+}
+
+/* Encadré sur fond bleu nuit */
+.section-night .formation-tip {
+  background-color: var(--d-cream);
+  color: var(--d-text);
+}
+
+/* ── Bandeau « LA RÈGLE D'OR » ── */
+.formation-rule {
+  background-color: var(--d-night);
+  color: var(--d-cream);
+  border-top: 1px solid color-mix(in srgb, var(--d-gold) 35%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--d-gold) 35%, transparent);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.formation-rule .formation-body {
+  opacity: 0.9;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Cartes ── */
+.section-cream .formation-card {
+  background-color: var(--d-cream);
+  border: 1px solid color-mix(in srgb, var(--d-night) 12%, transparent);
+}
+
+.section-night .formation-card {
+  background-color: var(--d-cream);
+  color: var(--d-text);
+  border: 1px solid color-mix(in srgb, var(--d-gold) 30%, transparent);
+}
+
+.section-night .formation-card .formation-title {
+  color: var(--d-night);
+}
+
+.section-night .formation-card .formation-body {
+  color: var(--d-text);
+  opacity: 1;
+}
+
+.section-night .formation-card .formation-label {
+  color: var(--d-gold);
+}
+
+/* Bloc chiffre clé (or) sur bleu nuit */
+.formation-stat-block {
+  background-color: var(--d-night);
+  color: var(--d-cream);
+  border: 1px solid color-mix(in srgb, var(--d-gold) 35%, transparent);
+  padding: 2rem 2.5rem;
+}
+
+.formation-stat-block .formation-key {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  font-weight: 500;
+}
+
+/* Citation encadrée */
+.formation-quote {
+  border-left: 2px solid var(--d-gold);
+  padding-left: 1.5rem;
+}
+
+.section-cream .formation-quote .formation-title {
+  color: var(--d-night);
+  font-style: italic;
+}
+
+/* ── Filigrane logo ── */
+.formation-bg-logo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formation-bg-logo-img {
+  width: min(72vw, 480px);
+  height: min(72vw, 480px);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.05;
+}
+
+.formation-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header / Footer (bleu nuit) ── */
+.formation-header {
+  position: relative;
+  z-index: 50;
+  background-color: var(--d-night);
+  border-bottom: 1px solid color-mix(in srgb, var(--d-gold) 30%, transparent);
+}
+
+.formation-footer {
+  background-color: var(--d-night);
+  border-top: 1px solid color-mix(in srgb, var(--d-gold) 30%, transparent);
+}
+
+.formation-footer .formation-body {
+  opacity: 0.75;
+}
+
+/* ── Formulaires (fond bleu nuit) ── */
+.formation-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--d-cream);
+  background-color: var(--d-night);
+  border: 1px solid color-mix(in srgb, var(--d-cream) 25%, transparent);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.formation-input:focus {
+  border-color: var(--d-gold);
+}
+
+.formation-input::placeholder {
+  color: var(--d-cream);
+  opacity: 0.4;
+}
+
+/* ── Liens & nav ── */
+.formation-link {
+  color: var(--d-gold);
+  text-decoration: none;
+}
+
+.formation-link:hover {
+  text-decoration: underline;
+}
+
+.formation-nav-link {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--d-cream);
+  opacity: 0.75;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.formation-nav-link:hover {
+  opacity: 1;
+  color: var(--d-gold);
+}
+
+.formation-monogram {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--d-gold);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--d-gold);
+}
+
+/* ── Illustrations anime vivantes (personnages visibles en entier) ── */
+.formation-anime-wrap {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--d-night);
+  border-bottom: 1px solid color-mix(in srgb, var(--d-gold) 35%, transparent);
+}
+
+.formation-anime-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  object-position: center center;
+  transform-origin: center center;
+  animation: formation-breathe 5.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.formation-anime-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 40%,
+    color-mix(in srgb, var(--d-gold) 18%, transparent) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: formation-shimmer 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.formation-anime-wrap::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  bottom: 18%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--d-cream) 70%, transparent);
+  box-shadow:
+    18px -22px 0 2px color-mix(in srgb, var(--d-cream) 45%, transparent),
+    36px -8px 0 1px color-mix(in srgb, var(--d-cream) 35%, transparent);
+  animation: formation-steam 3.2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes formation-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes formation-shimmer {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -40% 0;
+  }
+}
+
+@keyframes formation-steam {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: translateY(-10px) scale(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formation-anime-img,
+  .formation-anime-wrap::after,
+  .formation-anime-wrap::before {
+    animation: none;
+  }
+}

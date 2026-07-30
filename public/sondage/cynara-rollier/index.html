@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#e8742c">
+  <title>Sondage sandwich — Cynara Rollier | Derra Vending</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="/brand/logo.png">
+  <link rel="stylesheet" href="/sondage/sondage.css">
+</head>
+<body>
+  <div class="sondage-page">
+    <header class="sondage-header">
+      <img src="/brand/logo.png" alt="Derra Vending" class="sondage-logo">
+      <div>
+        <p class="sondage-brand">Derra Vending</p>
+        <h1>Cynara · Chantier Rollier</h1>
+      </div>
+    </header>
+
+    <section class="sondage-intro" id="intro">
+      <span class="sondage-tag">Votre avis compte</span>
+      <h2>Quel sandwich préférez-vous ?</h2>
+      <p>Choisissez celui que vous aimeriez retrouver dans ce distributeur.</p>
+    </section>
+
+    <form class="sondage-options" id="surveyForm">
+      <label class="sondage-card">
+        <input type="radio" name="choice" value="thon" required>
+        <img src="/sondage/images/sandwich-thon.png" alt="Sandwich thon tomates marinées">
+        <span class="sondage-card-label">Thon tomates marinées</span>
+      </label>
+      <label class="sondage-card">
+        <input type="radio" name="choice" value="jambon">
+        <img src="/sondage/images/sandwich-jambon.png" alt="Sandwich jambon cheddar">
+        <span class="sondage-card-label">Jambon cheddar</span>
+      </label>
+      <label class="sondage-card">
+        <input type="radio" name="choice" value="saumon">
+        <img src="/sondage/images/sandwich-saumon.png" alt="Sandwich duo de saumon">
+        <span class="sondage-card-label">Duo de saumon</span>
+      </label>
+      <button type="submit" class="sondage-submit" id="submitBtn">Envoyer mon choix</button>
+    </form>
+
+    <section class="sondage-thanks hidden" id="thanks">
+      <div class="thanks-icon">✓</div>
+      <h2>Merci !</h2>
+      <p>Votre préférence a bien été enregistrée.</p>
+      <p class="thanks-sub">Derra Vending — Genève &amp; Suisse romande</p>
+    </section>
+
+    <p class="sondage-error hidden" id="error"></p>
+  </div>
+
+  <script>
+    const MACHINE_ID = "cynara-rollier";
+    const VOTED_KEY = "derra-voted-" + MACHINE_ID;
+    const form = document.getElementById("surveyForm");
+    const intro = document.getElementById("intro");
+    const thanks = document.getElementById("thanks");
+    const errorEl = document.getElementById("error");
+    const submitBtn = document.getElementById("submitBtn");
+
+    if (localStorage.getItem(VOTED_KEY)) {
+      form.classList.add("hidden");
+      intro.classList.add("hidden");
+      thanks.classList.remove("hidden");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorEl.classList.add("hidden");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Envoi…";
+
+      const choice = new FormData(form).get("choice");
+      try {
+        const res = await fetch("/api/sondage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ machine: MACHINE_ID, choice }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erreur");
+
+        localStorage.setItem(VOTED_KEY, choice);
+        form.classList.add("hidden");
+        intro.classList.add("hidden");
+        thanks.classList.remove("hidden");
+      } catch (err) {
+        errorEl.textContent = err.message || "Impossible d'envoyer. Réessayez.";
+        errorEl.classList.remove("hidden");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Envoyer mon choix";
+      }
+    });
+
+    document.querySelectorAll(".sondage-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        document.querySelectorAll(".sondage-card").forEach((c) => c.classList.remove("selected"));
+        card.classList.add("selected");
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalogue Derra Vending — Gaggia G100</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Catalogue 1 page A5 — Derra Vending · Gaggia G100 */
+    :root {
+      --navy: #1a2b4a;
+      --orange: #e8742c;
+      --white: #ffffff;
+      --gray-50: #f8f9fb;
+      --gray-100: #eef1f6;
+      --gray-500: #64748b;
+      --font: "Plus Jakarta Sans", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: 148mm 210mm; margin: 0; }
+
+    @media print {
+      html, body { margin: 0; padding: 0; background: white; }
+      .flyer { box-shadow: none !important; }
+      .no-print { display: none !important; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    body {
+      font-family: var(--font);
+      background: #c8d0dc;
+      color: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 12px 28px;
+    }
+
+    .flyer {
+      width: 148mm;
+      height: 210mm;
+      background: var(--white);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 6px 32px rgba(26, 43, 74, 0.2);
+    }
+
+    /* En-tête */
+    .header {
+      background: var(--navy);
+      padding: 3mm 5mm;
+      display: flex;
+      align-items: center;
+      gap: 3mm;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      width: 13mm;
+      height: 13mm;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .brand { flex: 1; }
+    .brand h1 { font-size: 9pt; font-weight: 800; color: white; }
+    .brand h1 span { color: var(--orange); }
+    .brand p { font-size: 5pt; color: rgba(255,255,255,0.65); }
+
+    .badge {
+      background: var(--orange);
+      color: white;
+      font-size: 5pt;
+      font-weight: 800;
+      padding: 1.2mm 2.5mm;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    /* Corps */
+    .main { flex: 1; padding: 3.5mm 5mm 3mm; display: flex; flex-direction: column; gap: 2.5mm; min-height: 0; }
+
+    .hero h2 {
+      font-size: 10.5pt;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h2 em { font-style: normal; color: var(--orange); }
+
+    .hero .sub {
+      font-size: 6pt;
+      color: var(--gray-500);
+      margin-top: 1mm;
+      line-height: 1.35;
+    }
+
+    .hero .sub strong { color: var(--navy); }
+
+    /* Visuel + avantages */
+    .visual-row {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 2.5mm;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .machine-wrap {
+      position: relative;
+      border-radius: 2mm;
+      overflow: hidden;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-100);
+    }
+
+    .machine-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    .machine-wrap .label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(26,43,74,0.92));
+      padding: 4mm 2mm 2mm;
+      text-align: center;
+    }
+
+    .machine-wrap .label strong {
+      font-size: 6pt;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1.5mm;
+    }
+
+    .benefit {
+      background: var(--gray-50);
+      border-radius: 1.5mm;
+      padding: 2mm;
+      border-left: 2px solid var(--orange);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .benefit h3 { font-size: 5.5pt; font-weight: 800; line-height: 1.2; margin-bottom: 0.4mm; }
+    .benefit p { font-size: 4.8pt; color: var(--gray-500); line-height: 1.3; }
+
+    /* Boissons */
+    .drinks-label {
+      font-size: 5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--navy);
+    }
+
+    .drinks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1mm;
+    }
+
+    .drink {
+      background: var(--navy);
+      color: white;
+      font-size: 4.5pt;
+      font-weight: 600;
+      padding: 1mm 2mm;
+      border-radius: 1mm;
+    }
+
+    /* Commerce + étapes */
+    .mid-row {
+      display: grid;
+      grid-template-columns: 20mm 1fr;
+      gap: 2.5mm;
+      align-items: center;
+    }
+
+    .mid-row img {
+      width: 20mm;
+      height: 16mm;
+      object-fit: cover;
+      border-radius: 1.5mm;
+    }
+
+    .mid-row p {
+      font-size: 5.5pt;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+
+    .mid-row strong { color: var(--orange); font-weight: 800; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2mm;
+    }
+
+    .step {
+      text-align: center;
+      background: var(--gray-50);
+      border-radius: 1.5mm;
+      padding: 1.5mm 1mm;
+    }
+
+    .step .n {
+      display: inline-flex;
+      width: 5mm; height: 5mm;
+      background: var(--orange);
+      color: white;
+      border-radius: 50%;
+      font-size: 6pt;
+      font-weight: 800;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5mm;
+    }
+
+    .step h4 { font-size: 5.5pt; font-weight: 800; }
+    .step p { font-size: 4.5pt; color: var(--gray-500); line-height: 1.25; margin-top: 0.3mm; }
+
+    .cta {
+      background: var(--orange);
+      text-align: center;
+      padding: 2.5mm;
+      border-radius: 2mm;
+      flex-shrink: 0;
+    }
+
+    .cta p {
+      font-size: 7.5pt;
+      font-weight: 800;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    /* Pied contact */
+    .footer {
+      background: var(--navy);
+      padding: 3mm 5mm 3.5mm;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .footer-title {
+      font-size: 5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--orange);
+      margin-bottom: 1.5mm;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2mm 3mm;
+    }
+
+    .ci label {
+      display: block;
+      font-size: 4pt;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .ci .v { font-size: 6pt; font-weight: 700; }
+    .ci .v.sm { font-size: 5pt; font-weight: 500; }
+
+    .footer-note {
+      margin-top: 1.5mm;
+      padding-top: 1.5mm;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 4pt;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+    }
+
+    .toolbar {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--gray-500);
+      max-width: 148mm;
+    }
+
+    .toolbar button {
+      margin-top: 8px;
+      padding: 10px 24px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <article class="flyer">
+
+    <header class="header">
+      <img class="logo" src="assets/logo.png" alt="Derra Vending">
+      <div class="brand">
+        <h1>Derra <span>Vending</span></h1>
+        <p>Meyrin · Genève · Suisse romande</p>
+      </div>
+      <div class="badge">0 CHF d'installation</div>
+    </header>
+
+    <div class="main">
+      <div class="hero">
+        <h2>Une machine à café <em>premium</em> dans votre commerce — sans investissement</h2>
+        <p class="sub"><strong>Gaggia Milano G100</strong> installée gratuitement · Entretien &amp; approvisionnement inclus · Service clé en main</p>
+      </div>
+
+      <div class="visual-row">
+        <figure class="machine-wrap">
+          <img src="assets/gaggia-hero.png" alt="Gaggia Milano G100">
+          <figcaption class="label"><strong>Gaggia Milano · G100</strong></figcaption>
+        </figure>
+        <div class="benefits">
+          <div class="benefit">
+            <h3>Installée gratuitement</h3>
+            <p>Aucun achat, aucun loyer pour vous.</p>
+          </div>
+          <div class="benefit">
+            <h3>Boissons variées</h3>
+            <p>Espresso, cappuccino, macchiato, chocolat…</p>
+          </div>
+          <div class="benefit">
+            <h3>Zéro charge</h3>
+            <p>Entretien &amp; réapprovisionnement gérés par nous.</p>
+          </div>
+          <div class="benefit">
+            <h3>Service local</h3>
+            <p>Intervention rapide en Suisse romande.</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="drinks-label">Boissons disponibles</div>
+        <div class="drinks">
+          <span class="drink">Espresso</span>
+          <span class="drink">Espresso Macchiato</span>
+          <span class="drink">Espresso Long</span>
+          <span class="drink">Cappuccino</span>
+          <span class="drink">Macchiato</span>
+          <span class="drink">Lait chaud</span>
+          <span class="drink">Chocolat</span>
+          <span class="drink">Americano</span>
+        </div>
+      </div>
+
+      <div class="mid-row">
+        <img src="assets/commerce-reel.png" alt="Installation en commerce">
+        <p><strong>Attirez plus de clients</strong> — une pause café premium augmente le passage en magasin et modernise votre image. Idéal magasins, kiosques &amp; boutiques.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="n">1</div>
+          <h4>Contact</h4>
+          <p>Étude gratuite de votre espace</p>
+        </div>
+        <div class="step">
+          <div class="n">2</div>
+          <h4>Installation</h4>
+          <p>G100 installée sans frais</p>
+        </div>
+        <div class="step">
+          <div class="n">3</div>
+          <h4>On gère tout</h4>
+          <p>Entretien &amp; approvisionnement</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <p>Contactez-nous pour une installation gratuite</p>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-title">Contact</div>
+      <div class="contact-grid">
+        <div class="ci">
+          <label>Entreprise</label>
+          <div class="v">Derra Vending</div>
+        </div>
+        <div class="ci">
+          <label>Zone</label>
+          <div class="v">Suisse romande</div>
+        </div>
+        <div class="ci">
+          <label>Téléphone</label>
+          <div class="v">+41 79 757 08 97</div>
+        </div>
+        <div class="ci">
+          <label>Email</label>
+          <div class="v sm">derra_vending@hotmail.com</div>
+        </div>
+        <div class="ci" style="grid-column:1/-1">
+          <label>Adresse</label>
+          <div class="v sm">Rue de la Golette 15G · 1217 Meyrin · UID CHE-322.659.692</div>
+        </div>
+      </div>
+      <p class="footer-note">Derra Vending — Solutions café professionnelles · Ibrahim Derra</p>
+    </footer>
+
+  </article>
+
+  <div class="no-print toolbar">
+    <p>Catalogue <strong>1 page A5</strong> · Ctrl+P → A5 → Marges aucune → Enregistrer PDF</p>
+    <button onclick="window.print()">Imprimer / Exporter PDF</button>
+  </div>
+
+</body>
+</html>

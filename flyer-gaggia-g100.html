@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flyer Derra Vending — Gaggia G100</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       FLYER COMMERCIAL DERRA VENDING — GAGGIA G100
+       Format : A5 portrait (148 × 210 mm) — prêt impression / PDF
+       Palette : bleu marine #1a2b4a · orange #e8742c · blanc
+       ============================================================ */
+
+    :root {
+      --navy: #1a2b4a;
+      --navy-light: #2a3f66;
+      --orange: #e8742c;
+      --orange-dark: #c95f1f;
+      --white: #ffffff;
+      --gray-50: #f7f8fa;
+      --gray-100: #eef1f5;
+      --gray-400: #94a3b8;
+      --gray-600: #64748b;
+      --font: "Plus Jakarta Sans", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* --- Configuration page impression --- */
+    @page {
+      size: 148mm 210mm;
+      margin: 0;
+    }
+
+    @media print {
+      html, body {
+        width: 148mm;
+        height: 210mm;
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .flyer { box-shadow: none !important; }
+      .no-print { display: none !important; }
+    }
+
+    body {
+      font-family: var(--font);
+      background: #dde3ec;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+      color: var(--navy);
+    }
+
+    /* --- Conteneur flyer A5 --- */
+    .flyer {
+      width: 148mm;
+      height: 210mm;
+      background: var(--white);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 40px rgba(26, 43, 74, 0.18);
+      position: relative;
+    }
+
+    /* Bandeau supérieur */
+    .header {
+      background: var(--navy);
+      padding: 5mm 7mm 4mm;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4mm;
+    }
+
+    /* Placeholder logo — remplacer src par votre fichier */
+    .logo-wrap {
+      width: 18mm;
+      height: 18mm;
+      border-radius: 50%;
+      background: var(--white);
+      border: 1.5px dashed rgba(255,255,255,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .logo-placeholder {
+      font-size: 6pt;
+      color: var(--gray-400);
+      text-align: center;
+      line-height: 1.3;
+      padding: 2mm;
+    }
+
+    .brand-block { flex: 1; }
+
+    .brand-name {
+      font-size: 11pt;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: 0.02em;
+    }
+
+    .brand-name span { color: var(--orange); }
+
+    .brand-tag {
+      font-size: 6.5pt;
+      color: rgba(255,255,255,0.7);
+      margin-top: 0.5mm;
+      font-weight: 500;
+    }
+
+    .zone-badge {
+      background: var(--orange);
+      color: var(--white);
+      font-size: 6pt;
+      font-weight: 700;
+      padding: 1.5mm 3mm;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    /* Corps principal */
+    .body {
+      flex: 1;
+      padding: 5mm 7mm 4mm;
+      display: flex;
+      flex-direction: column;
+      gap: 3.5mm;
+    }
+
+    /* Titre accrocheur */
+    .hero-title {
+      font-size: 13.5pt;
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--orange);
+    }
+
+    .hero-sub {
+      font-size: 7.5pt;
+      color: var(--gray-600);
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .hero-sub strong { color: var(--navy); font-weight: 700; }
+
+    /* Photo machine — emplacement central */
+    .machine-photo {
+      width: 100%;
+      height: 52mm;
+      border-radius: 3mm;
+      background: linear-gradient(145deg, var(--gray-50), var(--gray-100));
+      border: 1.5px dashed var(--gray-400);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2mm;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .machine-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .machine-photo .placeholder-icon {
+      width: 14mm;
+      height: 14mm;
+      opacity: 0.35;
+    }
+
+    .machine-photo .placeholder-text {
+      font-size: 6.5pt;
+      color: var(--gray-400);
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .machine-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(26,43,74,0.85));
+      padding: 4mm 3mm 2.5mm;
+      text-align: center;
+    }
+
+    .machine-label span {
+      font-size: 7pt;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* Grille arguments clés */
+    .benefits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5mm;
+    }
+
+    .benefit {
+      background: var(--gray-50);
+      border-radius: 2.5mm;
+      padding: 2.5mm 3mm;
+      border-left: 2px solid var(--orange);
+      display: flex;
+      gap: 2mm;
+      align-items: flex-start;
+    }
+
+    .benefit-icon {
+      width: 7mm;
+      height: 7mm;
+      flex-shrink: 0;
+      background: var(--navy);
+      border-radius: 1.5mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .benefit-icon svg {
+      width: 4mm;
+      height: 4mm;
+      fill: var(--orange);
+    }
+
+    .benefit h3 {
+      font-size: 6.5pt;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 0.5mm;
+    }
+
+    .benefit p {
+      font-size: 5.5pt;
+      color: var(--gray-600);
+      line-height: 1.35;
+    }
+
+    /* Phrase valorisation commerçant */
+    .value-prop {
+      background: var(--navy);
+      border-radius: 2.5mm;
+      padding: 3mm 4mm;
+      text-align: center;
+    }
+
+    .value-prop p {
+      font-size: 7pt;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.45;
+    }
+
+    .value-prop strong { color: var(--orange); }
+
+    /* Appel à l'action */
+    .cta {
+      text-align: center;
+      padding: 1mm 0;
+    }
+
+    .cta-text {
+      font-size: 9pt;
+      font-weight: 800;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+  /* --- Pied de page contact --- */
+    .footer {
+      background: var(--navy-light);
+      padding: 4mm 7mm 5mm;
+      color: var(--white);
+    }
+
+    .footer-title {
+      font-size: 7pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--orange);
+      margin-bottom: 2.5mm;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2mm 4mm;
+    }
+
+    .contact-item label {
+      display: block;
+      font-size: 5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0.5mm;
+      font-weight: 600;
+    }
+
+    .contact-item .value {
+      font-size: 7pt;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+    }
+
+    .contact-item .value.small {
+      font-size: 6pt;
+      font-weight: 500;
+    }
+
+    .footer-note {
+      margin-top: 2.5mm;
+      padding-top: 2mm;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      font-size: 5pt;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    /* Bouton aide écran (masqué à l'impression) */
+    .print-hint {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--gray-600);
+      text-align: center;
+      max-width: 148mm;
+    }
+
+    .print-btn {
+      margin-top: 8px;
+      padding: 10px 24px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .print-btn:hover { background: var(--navy-light); }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== FLYER A5 ===================== -->
+  <article class="flyer" role="document" aria-label="Flyer commercial Derra Vending Gaggia G100">
+
+    <!-- En-tête -->
+    <header class="header">
+      <div class="logo-wrap">
+        <!-- Remplacer par : <img src="votre-logo.png" alt="Derra Vending"> -->
+        <div class="logo-placeholder">LOGO<br>ICI</div>
+      </div>
+      <div class="brand-block">
+        <div class="brand-name">Derra <span>Vending</span></div>
+        <div class="brand-tag">Solutions café professionnelles · Genève</div>
+      </div>
+      <div class="zone-badge">Suisse romande</div>
+    </header>
+
+    <div class="body">
+
+      <!-- Titre & sous-titre -->
+      <h1 class="hero-title">
+        Une machine à café premium dans votre commerce — <em>sans investissement</em>
+      </h1>
+      <p class="hero-sub">
+        <strong>Installation gratuite</strong> · Entretien &amp; approvisionnement inclus · Service clé en main
+      </p>
+
+      <!-- Photo Gaggia G100 — emplacement central -->
+      <figure class="machine-photo">
+        <!-- Remplacer par : <img src="gaggia-g100.jpg" alt="Machine Gaggia Milano G100"> -->
+        <svg class="placeholder-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="12" y="8" width="40" height="48" rx="4" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="18" y="16" width="28" height="10" rx="2" fill="#94a3b8" opacity="0.4"/>
+          <circle cx="32" cy="42" r="6" stroke="#94a3b8" stroke-width="2"/>
+        </svg>
+        <p class="placeholder-text">PHOTO MACHINE<br>Gaggia Milano G100</p>
+        <div class="machine-label"><span>Gaggia Milano · Modèle G100</span></div>
+      </figure>
+
+      <!-- 4 arguments clés -->
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.2l7.5 3.75L12 11.7 4.5 7.95 12 4.2zM4 9.05l7 3.5v7.35l-7-3.5V9.05zm9 10.85v-7.35l7-3.5v7.35l-7 3.5z"/></svg>
+          </div>
+          <div>
+            <h3>Installée gratuitement</h3>
+            <p>Machine professionnelle Gaggia Milano G100, sans achat ni loyer pour vous.</p>
+          </div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M18.5 3H6c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12.5c.83 0 1.5-.67 1.5-1.5v-15c0-.83-.67-1.5-1.5-1.5zM6 5h12v10H6V5zm2 14h8v2H8v-2z"/></svg>
+          </div>
+          <div>
+            <h3>Large choix de boissons</h3>
+            <p>Espresso, cappuccino, macchiato, americano, chocolat chaud et plus encore.</p>
+          </div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M22.7 19.6l-4.1-4.1c.6-1 .9-2.1.9-3.3 0-3.9-3.1-7-7-7s-7 3.1-7 7 3.1 7 7 7c1.2 0 2.3-.3 3.3-.9l4.1 4.1c.4.4 1 .4 1.4 0s.4-1 .1-1.4zM12 18c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"/></svg>
+          </div>
+          <div>
+            <h3>Entretien géré par nous</h3>
+            <p>Maintenance, nettoyage et réapprovisionnement : zéro charge pour vous.</p>
+          </div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v7H6v-7zm4 0h2v7h-2v-7zm4 0h2v4h-2v-4z"/></svg>
+          </div>
+          <div>
+            <h3>Service local</h3>
+            <p>Basés à Meyrin — intervention rapide sur Genève et toute la Suisse romande.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Valorisation commerçant -->
+      <div class="value-prop">
+        <p>
+          Offrez à vos clients une <strong>pause café premium</strong> :
+          plus de passage en magasin, une image moderne et un service qui fidélise — sans effort de votre part.
+        </p>
+      </div>
+
+      <!-- Appel à l'action -->
+      <div class="cta">
+        <p class="cta-text">Contactez-nous pour une installation gratuite</p>
+      </div>
+
+    </div>
+
+    <!-- Bloc contact -->
+    <footer class="footer">
+      <div class="footer-title">Contact</div>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <label>Entreprise</label>
+          <div class="value">Derra Vending</div>
+        </div>
+        <div class="contact-item">
+          <label>Zone d'intervention</label>
+          <div class="value">Suisse romande</div>
+        </div>
+        <div class="contact-item">
+          <label>Téléphone</label>
+          <div class="value">+41 79 757 08 97</div>
+        </div>
+        <div class="contact-item">
+          <label>Email</label>
+          <div class="value small">derra_vending@hotmail.com</div>
+        </div>
+        <div class="contact-item" style="grid-column: 1 / -1;">
+          <label>Adresse</label>
+          <div class="value small">Rue de la Golette 15G · 1217 Meyrin · UID CHE-322.659.692</div>
+        </div>
+      </div>
+      <p class="footer-note">Derra Vending — Partenaire café professionnel · Genève &amp; Suisse romande</p>
+    </footer>
+
+  </article>
+
+  <!-- Aide écran uniquement -->
+  <div class="no-print print-hint">
+    <p>Format A5 (148 × 210 mm). Pour exporter en PDF : Ctrl+P → « Enregistrer au format PDF » → format A5, marges aucune.</p>
+    <button class="print-btn" onclick="window.print()">Imprimer / Exporter PDF</button>
+  </div>
+
+</body>
+</html>

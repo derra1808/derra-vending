@@ -1,0 +1,19 @@
+/* Ambiance apaisante — fond blanc avec nuance sage & lavande */
+.horoscope-page {
+  background: linear-gradient(
+    165deg,
+    #fafcfb 0%,
+    #f5f9f7 35%,
+    #f4f2f9 70%,
+    #eef4f1 100%
+  );
+  min-height: 100vh;
+}
+
+.horoscope-orb-sage {
+  background: radial-gradient(circle, rgba(107, 144, 128, 0.12) 0%, transparent 70%);
+}
+
+.horoscope-orb-lavender {
+  background: radial-gradient(circle, rgba(155, 139, 184, 0.1) 0%, transparent 70%);
+}

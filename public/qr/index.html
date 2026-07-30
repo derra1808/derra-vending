@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes QR codes — Derra Vending</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/brand/logo.png">
+</head>
+<body>
+  <div class="bg-logo" aria-hidden="true"></div>
+
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="/" class="logo-link">
+        <img src="/brand/logo.png" alt="Derra Vending" class="logo-img">
+        <span class="logo-text">Derra <strong>Vending</strong></span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/#solutions">Solutions</a></li>
+        <li><a href="/commerces/">Commerces</a></li>
+        <li><a href="/chantiers/">Chantiers</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="tel:+41797570897" class="nav-phone">+41 79 757 08 97</a>
+      <a href="/#contact" class="btn btn-primary btn-sm nav-cta">Visite gratuite</a>
+    </nav>
+  </header>
+
+  <main class="page-sub">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="tag">Outils</span>
+        <h1>Mes QR codes</h1>
+        <p>Téléchargez, imprimez et collez sur vos distributeurs.</p>
+      </div>
+
+      <div class="qr-rule reveal">
+        <strong>Sur chaque distributeur, collez les 2 autocollants :</strong>
+        <br>1. <strong>Site internet</strong> — pour découvrir Derra Vending
+        <br>2. <strong>Sondage</strong> — pour voter son sandwich préféré
+      </div>
+
+      <p class="qr-section-label reveal">À coller sur le distributeur</p>
+      <div class="qr-pair reveal">
+        <article class="qr-card">
+          <span class="qr-card-tag">Autocollant site</span>
+          <h3>Site internet</h3>
+          <p>« Scannez pour découvrir Derra Vending »</p>
+          <img src="/qr/site-machine-autocollant.png" alt="Autocollant QR site">
+          <a class="btn btn-primary" href="/qr/site-machine-autocollant.png" download="Derra-Vending-Site-Machine.png">Télécharger</a>
+        </article>
+        <article class="qr-card">
+          <span class="qr-card-tag qr-card-tag--orange">Autocollant sondage</span>
+          <h3>Sondage sandwich</h3>
+          <p>« Scannez pour voter » — Cynara Rollier</p>
+          <img src="/qr/sondage-machine-autocollant.png" alt="Autocollant QR sondage">
+          <a class="btn btn-primary" href="/qr/sondage-machine-autocollant.png" download="Derra-Vending-Sondage-Machine.png">Télécharger</a>
+        </article>
+      </div>
+
+      <p class="qr-section-label reveal">Pour WhatsApp &amp; réseaux</p>
+      <article class="qr-card reveal" style="max-width:400px;margin:0 auto 24px">
+        <span class="qr-card-tag qr-card-tag--green">Partage digital</span>
+        <h3>QR site — WhatsApp / Instagram</h3>
+        <p>Version légère, idéale pour envoyer sur WhatsApp.</p>
+        <img src="/qr/derra-vending-qr.png" alt="QR site">
+        <a class="btn btn-primary" href="/qr/derra-vending-qr.png" download="Derra-Vending-Site.png">Télécharger</a>
+      </article>
+
+      <article class="qr-card reveal">
+        <h3>Rappel rapide</h3>
+        <table class="qr-table">
+          <thead><tr><th>Où</th><th>Quoi coller / envoyer</th></tr></thead>
+          <tbody>
+            <tr><td>Sur le distributeur</td><td>Les <strong>2 autocollants</strong> (site + sondage)</td></tr>
+            <tr><td>WhatsApp / réseaux</td><td>QR site léger ou lien du site</td></tr>
+            <tr><td>Voir les résultats</td><td><a href="/admin/sondage/">Mes stats</a> (mot de passe)</td></tr>
+          </tbody>
+        </table>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="/" class="logo-link">
+          <img src="/brand/logo.png" alt="" class="logo-img">
+          <span class="logo-text">Derra <strong>Vending</strong></span>
+        </a>
+        <p class="footer-desc">Installation gratuite de distributeurs automatiques à Genève et en Suisse romande.</p>
+        <div class="social-links" data-social="footer" aria-label="Réseaux sociaux"></div>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <a href="/#solutions">Solutions</a>
+        <a href="/#sondage-live">Sondage live</a>
+        <a href="/qr/">Mes QR codes</a>
+        <a href="/admin/sondage/">Mes stats</a>
+        <a href="/#contact">Contact</a>
+      </div>
+      <div>
+        <h4>Légal</h4>
+        <p>Rue de la Golette 15G, 1217 Meyrin</p>
+        <p>UID CHE-322.659.692</p>
+        <p>© 2026 Derra Vending</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/social.js"></script>
+  <script src="/script.js"></script>
+</body>
+</html>

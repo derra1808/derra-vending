@@ -1,0 +1,32 @@
+# 5 publications / jour — PC éteint (GitHub appelle Vercel)
+# Prérequis : secret repo CRON_SECRET (= même valeur que sur Vercel)
+
+name: Studio auto publish
+
+on:
+  schedule:
+    # Heures UTC ≈ 8h, 11h, 14h, 17h, 20h Europe/Zurich (été UTC+2)
+    - cron: "0 6 * * *"
+    - cron: "0 9 * * *"
+    - cron: "0 12 * * *"
+    - cron: "0 15 * * *"
+    - cron: "0 18 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lancer 1 vidéo studio
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "Secret CRON_SECRET manquant dans GitHub → Settings → Secrets"
+            exit 1
+          fi
+          curl -sfS -X GET \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "https://derra-vending.vercel.app/api/studio/cron"
+          echo ""
+          echo "OK"
