@@ -108,14 +108,49 @@ export async function updateStudioVideo(
 
 export async function countVideosCreatedToday(): Promise<number> {
   const supabase = createAdminClient();
-  const start = new Date();
-  start.setUTCHours(0, 0, 0, 0);
+  const { startOfZurichDayIso } = await import("./schedule");
+  // Jour civil Genève (pas UTC) — reset ~00:00 Zurich
+  const startIso = startOfZurichDayIso();
+  // Les échecs ne consomment pas le quota (tests / erreurs)
   const { count, error } = await supabase
     .from("studio_videos")
     .select("id", { count: "exact", head: true })
-    .gte("created_at", start.toISOString());
+    .gte("created_at", startIso)
+    .neq("status", "failed");
   if (error) throw new Error(error.message);
   return count || 0;
+}
+
+/** Nombre de vidéos non-failed créées dans le créneau actuel (jour Genève). */
+export async function countGeneratedInCurrentWindow(): Promise<number> {
+  const { currentPublishWindow, publishWindowAt, startOfZurichDayIso } =
+    await import("./schedule");
+  const win = currentPublishWindow();
+  if (!win) return 0;
+
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("studio_videos")
+    .select("created_at")
+    .gte("created_at", startOfZurichDayIso())
+    .neq("status", "failed")
+    .order("created_at", { ascending: false })
+    .limit(30);
+  if (error) throw new Error(error.message);
+
+  return (data || []).filter((row) => {
+    const w = publishWindowAt(row.created_at as string);
+    return w?.id === win.id;
+  }).length;
+}
+
+/** True si le créneau actuel a atteint son plafond (ex. matin = 2). */
+export async function currentWindowIsFull(): Promise<boolean> {
+  const { currentPublishWindow } = await import("./schedule");
+  const win = currentPublishWindow();
+  if (!win) return true;
+  const n = await countGeneratedInCurrentWindow();
+  return n >= win.cap;
 }
 
 /** Vidéos encore en cours (évite d’empiler un cron toutes les 10 min). */
@@ -146,7 +181,7 @@ function normalizeSettings(row: Record<string, unknown>): StudioSettings {
   return {
     id: 1,
     auto_publish: row.auto_publish !== false,
-    daily_quota: Number(row.daily_quota ?? 5),
+    daily_quota: Number(row.daily_quota ?? 10),
     platforms: (row.platforms as StudioPlatform[]) || [
       "youtube",
       "tiktok",

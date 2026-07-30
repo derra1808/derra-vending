@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   StudioSettings,
   StudioSetupStatus,
   StudioTheme,
   StudioVideo,
 } from "@/lib/studio/types";
+import { StudioProgressRing } from "@/components/studio/StudioProgressRing";
 
 interface Props {
   themes: StudioTheme[];
@@ -15,6 +16,24 @@ interface Props {
   settings: StudioSettings | null;
   setup: StudioSetupStatus;
   dbError: string | null;
+}
+
+interface LiveStatus {
+  working: boolean;
+  today: number;
+  quota: number;
+  remaining: number;
+  inProgress: number;
+  auto_publish: boolean;
+  inWindow?: boolean;
+  nextSlot?: string;
+  hint: string;
+  latest: {
+    title: string;
+    status: string;
+    error: string | null;
+  } | null;
+  now: string;
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -45,6 +64,52 @@ export function StudioDashboard({
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(dbError);
+  const [live, setLive] = useState<LiveStatus | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function pull() {
+      try {
+        const res = await fetch("/api/studio/status", { cache: "no-store" });
+        const data = await res.json();
+        if (!cancelled && res.ok) setLive(data as LiveStatus);
+      } catch {
+        // ignore
+      }
+    }
+    void pull();
+    const id = setInterval(() => void pull(), 3000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  // En local : Shotstack ne callback pas → on poll auto pendant qu’une vidéo tourne
+  useEffect(() => {
+    if (!live?.working) return;
+    let cancelled = false;
+    async function pollRender() {
+      try {
+        const res = await fetch("/api/studio/poll", { method: "POST" });
+        if (!cancelled && res.ok) {
+          const data = await res.json();
+          if (data.polled > 0) {
+            setMessage(data.message || "Montage terminé — publication…");
+            router.refresh();
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+    void pollRender();
+    const id = setInterval(() => void pollRender(), 15000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [live?.working, router]);
 
   async function saveThemeAndRun() {
     setBusy("save");
@@ -170,6 +235,23 @@ export function StudioDashboard({
     }
   }
 
+  async function runOnceNow() {
+    setBusy("runonce");
+    setError(null);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/studio/run-once", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Tour auto échoué");
+      setMessage(data.message || "Tour auto lancé.");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setBusy(null);
+    }
+  }
+
   const checks: { key: keyof StudioSetupStatus; label: string }[] = [
     { key: "claude", label: "Claude (Anthropic)" },
     { key: "elevenlabs", label: "ElevenLabs" },
@@ -183,11 +265,77 @@ export function StudioDashboard({
 
   return (
     <div className="space-y-12">
+      <section
+        className={`rounded-lg border px-4 py-4 ${
+          live?.working
+            ? "border-emerald-400/50 bg-emerald-500/10"
+            : "border-white/15 bg-ink-soft"
+        }`}
+      >
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="flex items-start gap-4 pb-4">
+            <StudioProgressRing
+              status={live?.latest?.status}
+              working={Boolean(live?.working)}
+            />
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-gold">
+                Activité en direct
+              </p>
+              <p className="mt-1 font-display text-xl text-cream">
+                {live?.latest?.status === "published"
+                  ? "Vidéo prête — publiée"
+                  : live?.working
+                    ? "En train de travailler…"
+                    : live
+                      ? "En attente du prochain tour"
+                      : "Chargement du statut…"}
+              </p>
+              <p className="mt-2 text-sm text-cream/70">
+                {live
+                  ? `${live.today}/${live.quota} aujourd’hui · ${live.remaining} restantes · ${live.inProgress} en cours`
+                  : "…"}
+              </p>
+              <p className="mt-1 text-xs text-cream/45">
+                Créneaux Genève — 10/jour : matin 2 · midi 2 · aprem 3 · soir 3
+              </p>
+              {live?.hint && (
+                <p className="mt-1 text-sm text-cream/55">{live.hint}</p>
+              )}
+              {live?.nextSlot && !live.inWindow && (
+                <p className="mt-1 text-sm text-gold/80">
+                  Prochaine publication : {live.nextSlot.replace("T", " ")}
+                </p>
+              )}
+              {live?.latest && (
+                <p className="mt-2 text-sm text-cream/80">
+                  Dernière : {live.latest.title} —{" "}
+                  <span className="text-gold">
+                    {STATUS_LABEL[live.latest.status] || live.latest.status}
+                  </span>
+                </p>
+              )}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={runOnceNow}
+            disabled={Boolean(busy)}
+            className="rounded bg-gold px-4 py-2.5 text-sm font-medium text-ink disabled:opacity-40"
+          >
+            {busy === "runonce"
+              ? "Lancement…"
+              : "Lancer 1 vidéo maintenant"}
+          </button>
+        </div>
+      </section>
+
       <section className="space-y-4">
         <h2 className="font-display text-xl text-gold">Configuration API</h2>
         <p className="text-sm text-cream/60">
-          PC éteint : l’auto tourne sur Vercel (5 histoires café/vending / jour via
-          cron). En local tu peux aussi lancer à la main ici.
+          Photos de tes machines + conseils. Auto local : dans un terminal{" "}
+          <code className="text-gold">npm run studio:auto</code> — jusqu’à 10
+          vidéos/jour, sans rien cliquer (PC allumé).
         </p>
         <ul className="grid gap-2 sm:grid-cols-2">
           {checks.map(({ key, label }) => (
@@ -296,8 +444,8 @@ export function StudioDashboard({
           </button>
         </div>
         <p className="text-xs text-cream/45">
-          En local, Shotstack ne peut pas rappeler ton PC — utilise ce bouton
-          après 1–2 min de montage.
+          En local, le poll Shotstack est automatique (~15 s) dès qu’une vidéo
+          est en montage. Ce bouton force une vérif immédiate.
         </p>
         {videos.length === 0 ? (
           <p className="text-sm text-cream/50">Aucune vidéo pour l’instant.</p>

@@ -1,5 +1,6 @@
 import { getStudioSetupStatus } from "./config";
 import {
+  currentWindowIsFull,
   countVideosCreatedToday,
   countVideosInProgress,
   createStudioVideo,
@@ -18,11 +19,19 @@ import {
   getShotstackRenderStatus,
   startCarouselPhotoRender,
 } from "./render";
+import {
+  isInPublishWindow,
+  SCHEDULE_DAILY_QUOTA,
+  scheduleHint,
+} from "./schedule";
 import { generateCarouselFromTheme } from "./script";
 import { getThemeById, pickTheme } from "./themes";
 import { synthesizeSpeech } from "./tts";
 import type { StudioTheme } from "./types";
-import { fetchPexelsPhotos, resolveCarouselSlideImages } from "./visuals";
+import {
+  resolveCarouselSlideImages,
+  resolveMixedDerraPexelsSlides,
+} from "./visuals";
 
 export function resolveActiveTheme(opts?: {
   themeId?: string | null;
@@ -70,8 +79,8 @@ function scaleSlideDurations<
 }
 
 /**
- * Pipeline : thème → Claude (slides uniques) → voix = texte à l'écran
- * → photos + musique basse → Shotstack → Metricool
+ * Pipeline : thème → Claude (slides viraux) → voix = texte à l'écran
+ * → photos Derra + Pexels + musique → Shotstack → Metricool
  */
 export async function runGeneratePipeline(opts?: {
   themeId?: string | null;
@@ -130,16 +139,8 @@ export async function runGeneratePipeline(opts?: {
       durationEstimateSec
     );
 
-    const slidesWithImages = [];
-    for (const slide of timedSlides) {
-      const photos = await fetchPexelsPhotos(slide.photoQuery, 1);
-      slidesWithImages.push({
-        imageUrl: photos[0]!.imageUrl || photos[0]!.url,
-        top: slide.top,
-        bottom: slide.bottom,
-        durationSec: slide.durationSec,
-      });
-    }
+    // ~60% vraies machines Derra + ~40% Pexels dynamique
+    const slidesWithImages = await resolveMixedDerraPexelsSlides(timedSlides);
 
     await updateStudioVideo(video.id, { status: "rendering" });
 
@@ -366,14 +367,15 @@ export async function runDailyCron(): Promise<{
 }
 
 /**
- * Cron (Vercel Hobby = 1×/jour natif) :
- * 1) finalise les rendus → publie Metricool
- * 2) génère 1 histoire café/vending si quota (<5/jour) pas atteint
- *
- * Pour viser 5/jour sur Hobby : appelle cette route ~5×/jour
- * (cron-job.org) avec Authorization: Bearer CRON_SECRET.
+ * Auto studio :
+ * 1) finalise les rendus → publie Metricool (créneaux Genève)
+ * 2) génère 1 carrousel si on est dans un créneau + quota OK
+ * Quota : 10 / jour (matin 2 · midi 2 · aprem 3 · soir 3)
  */
-export async function runStudioAutoCron(): Promise<{
+export async function runStudioAutoCron(opts?: {
+  /** Ignore le quota journalier (test / bouton manuel) */
+  ignoreQuota?: boolean;
+}): Promise<{
   generated?: string[];
   skipped?: string;
   polled?: number;
@@ -389,22 +391,36 @@ export async function runStudioAutoCron(): Promise<{
     };
   }
 
-  let quota = settings.daily_quota;
-  if (quota < 5 || quota > 12) {
-    await updateStudioSettings({ daily_quota: 5 });
-    quota = 5;
+  const quota = SCHEDULE_DAILY_QUOTA;
+  if (settings.daily_quota !== quota) {
+    await updateStudioSettings({ daily_quota: quota });
   }
 
   const today = await countVideosCreatedToday();
-  if (today >= quota) {
+  if (!opts?.ignoreQuota && today >= quota) {
     return { polled, skipped: `quota atteint ${today}/${quota}` };
+  }
+
+  // Hors créneau : on finalise/publie seulement (programmé au prochain slot)
+  if (!opts?.ignoreQuota && !isInPublishWindow()) {
+    return {
+      polled,
+      skipped: scheduleHint(),
+    };
+  }
+
+  if (!opts?.ignoreQuota && (await currentWindowIsFull())) {
+    return {
+      polled,
+      skipped: "créneau plein — prochaine fenêtre plus tard",
+    };
   }
 
   const inProgress = await countVideosInProgress();
   if (inProgress > 0) {
     return {
       polled,
-      skipped: `${inProgress} déjà en cours — retry plus tard`,
+      skipped: `${inProgress} déjà en cours — on réessaie au prochain tour`,
     };
   }
 

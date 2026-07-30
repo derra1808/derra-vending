@@ -9,6 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "studio:auto": "node scripts/studio-auto.mjs",
     "qr": "node qr/generate.js",
     "check:formation": "node scripts/check-formation-setup.mjs",
     "generate:ebook": "tsx scripts/generate-ebook-pdf.ts",

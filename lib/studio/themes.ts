@@ -1,137 +1,105 @@
 import type { StudioTheme } from "./types";
 
 /**
- * Banque de sujets passionnants — histoire du vending, café, machines.
- * Style : vraies histoires qui donnent envie d’écouter jusqu’à la fin.
+ * Banque de CONSEILS vending — style TikTok éducatif
+ * (vraies photos machines Derra en montage, pas de stock Pexels).
  */
 export const STUDIO_THEMES: StudioTheme[] = [
   {
-    id: "horn-vending-1880",
-    label: "La première machine à pièces",
+    id: "conseil-emplacement",
+    label: "Choisir le bon emplacement",
     angle:
-      "Raconter l’histoire de la première distributeuse à pièces (fin XIXe) comme une scène vivante : qui l’a inventée, ce qu’elle vendait, pourquoi ça a choqué l’époque. Teaser final vers le vending d’aujourd’hui.",
-    keywords: ["histoire vending", "distributeur", "invention", "café"],
-    visualQuery: "antique vintage coin machine museum",
+      "5 conseils concrets pour placer un distributeur là où les gens passent vraiment (flux, pause, concurrence). Ton coach terrain, pas théorie.",
+    keywords: ["emplacement", "conseil vending", "distributeur"],
+    visualQuery: "chantier",
   },
   {
-    id: "cafe-ethiopie",
-    label: "Le café est né en Éthiopie",
+    id: "conseil-produits",
+    label: "Quoi mettre dans la machine",
     angle:
-      "Légende de Kaldi et des chèvres qui dansent : une histoire vraie-mythe du café, puis le voyage jusqu’à nos tasses et nos distributeurs. Donner envie d’écouter la chute.",
-    keywords: ["histoire café", "Éthiopie", "Kaldi", "origine café"],
-    visualQuery: "ethiopia coffee plantation hills beans",
+      "Conseils assortiment : boissons classiques, snacks qui tournent, erreurs de débutant. Style liste actionnable.",
+    keywords: ["produits", "assortiment", "marges", "conseil"],
+    visualQuery: "realisation",
   },
   {
-    id: "espresso-milan",
-    label: "L’espresso est né à Milan",
+    id: "conseil-premier-distributeur",
+    label: "Ton premier distributeur",
     angle:
-      "Comment l’Italie a inventé l’espresso sous pression — une révolution en quelques secondes. Lien avec les machines bean-to-cup d’aujourd’hui en entreprise.",
-    keywords: ["espresso", "Italie", "machine café", "histoire"],
-    visualQuery: "italian espresso machine barista steam",
+      "Les étapes pour lancer un premier distributeur en 2026 : choisir, déplacer, brancher, réapprovisionner. Conseils pratiques une étape = une slide.",
+    keywords: ["premier distributeur", "débutant", "étapes"],
+    visualQuery: "realisation",
   },
   {
-    id: "guerre-distributeurs-usa",
-    label: "L’Amérique et l’âge d’or des distributeurs",
+    id: "conseil-cafe-bureau",
+    label: "Café au bureau qui plaît vraiment",
     angle:
-      "Années 50–70 aux USA : Coca, snacks, cigarettes — le vending partout. Une anecdote précise, un chiffre fou, une chute sur pourquoi l’Europe a suivi autrement.",
-    keywords: ["vending USA", "années 50", "distributeur automatique"],
-    visualQuery: "1950s american diner soda vending machine",
+      "Conseils pour un café d’entreprise que les gens boivent : grains, entretien, bean-to-cup, erreurs classiques des mauvaises machines.",
+    keywords: ["café bureau", "bean to cup", "conseil"],
+    visualQuery: "realisation",
   },
   {
-    id: "japon-vending-folie",
-    label: "Le Japon, roi mondial du vending",
+    id: "conseil-chantier",
+    label: "Installer sur un chantier",
     angle:
-      "Pourquoi le Japon a plus de distributeurs que d’habitants dans certaines villes : œufs, parapluies, café chaud… Une histoire ultra concrète qui surprend jusqu’à la fin.",
-    keywords: ["Japon", "distributeur", "vending culture", "café"],
-    visualQuery: "japan tokyo street vending machines night",
+      "Conseils concrets pour un distributeur / café sur chantier BTP : robustesse, horaires, paiement, réassort.",
+    keywords: ["chantier", "BTP", "café", "conseil"],
+    visualQuery: "chantier",
   },
   {
-    id: "twint-revolution",
-    label: "Du jeton au Twint",
+    id: "conseil-marges",
+    label: "Comprendre tes marges",
     angle:
-      "Petite histoire du paiement dans le vending : pièces, jetons, cartes, puis Twint. Une scène concrète “avant/après” qui parle aux gens en Suisse.",
-    keywords: ["Twint", "paiement", "distributeur", "Suisse"],
-    visualQuery: "mobile payment phone coffee machine",
+      "Conseils simples sur le prix de la tasse, le coût produit, et pourquoi 0,85 CHF peut être ultra rentable. Chiffres concrets, ton clair.",
+    keywords: ["marges", "prix", "rentabilité", "conseil"],
+    visualQuery: "realisation",
   },
   {
-    id: "bean-to-cup",
-    label: "Bean-to-cup : la machine qui change tout",
+    id: "conseil-reassort",
+    label: "Réapprovisionner sans stress",
     angle:
-      "Expliquer comme une histoire : grain entier → mouture → espresso en 30 secondes. Pourquoi ça a rendu le café de bureau enfin buvable (et désirable).",
-    keywords: ["bean to cup", "machine café", "espresso bureau"],
-    visualQuery: "bean to cup coffee machine grinding beans",
+      "Routine de réassort : fréquence, quoi prioriser, signes qu’une référence ne tourne pas. Conseils de pro terrain.",
+    keywords: ["réassort", "stock", "conseil vending"],
+    visualQuery: "realisation",
   },
   {
-    id: "necta-chantier",
-    label: "Le café sur les chantiers",
+    id: "conseil-paiement",
+    label: "Twint, carte, espèces",
     angle:
-      "Histoire vraie du terrain : ouvriers, 6h du matin, froid, besoin d’un vrai café. Comment une machine robuste devient le “cœur” du chantier. Ton humain, pas catalogue.",
-    keywords: ["chantier", "café", "BTP", "distributeur"],
-    visualQuery: "construction site workers coffee break morning",
+      "Conseils paiement : pourquoi proposer Twint + carte change les ventes en Suisse. Simple et concret.",
+    keywords: ["Twint", "paiement", "Suisse", "conseil"],
+    visualQuery: "realisation",
   },
   {
-    id: "arabica-robusta",
-    label: "Arabica vs Robusta : la guerre des grains",
+    id: "conseil-entretien",
+    label: "Entretenir la machine",
     angle:
-      "Deux personnages : Arabica (arômes) vs Robusta (corps, caféine). Une rivalité racontée comme un duel, puis ce que ça change dans une tasse de distributeur.",
-    keywords: ["arabica", "robusta", "café", "grains"],
-    visualQuery: "coffee beans arabica robusta close up",
+      "Conseils hygiène et revue rapide : ce qui fait fuir les clients (sale, en panne) et comment rester pro.",
+    keywords: ["entretien", "hygiène", "machine", "conseil"],
+    visualQuery: "realisation",
   },
   {
-    id: "premiere-pause-cafe",
-    label: "D’où vient la pause café ?",
+    id: "conseil-pme",
+    label: "Proposer à une PME",
     angle:
-      "Comment la pause café est devenue un rituel social au travail — histoire courte, chute sur pourquoi un distributeur bien placé change l’ambiance d’une boîte.",
-    keywords: ["pause café", "bureau", "histoire", "travail"],
-    visualQuery: "office coffee break colleagues talking",
+      "Conseils pour convaincre une entreprise : installation gratuite, zéro prise de tête, service inclus. Phrases utiles.",
+    keywords: ["PME", "entreprise", "argumentaire", "conseil"],
+    visualQuery: "realisation",
   },
   {
-    id: "machine-casse-mythe",
-    label: "Le mythe de la “mauvaise machine à café”",
+    id: "conseil-erreurs",
+    label: "Erreurs à éviter",
     angle:
-      "Pourquoi tant de machines d’entreprise font un café médiocre (entretien, eau, grains, négligence) — puis la révélation : une bonne machine bien gérée change tout. Hook fort.",
-    keywords: ["machine café", "qualité", "entretien", "bureau"],
-    visualQuery: "dirty office coffee machine neglected",
+      "3–5 erreurs de débutant en vending (mauvais lieu, mauvais mix, négliger le service) + le bon réflexe à la place.",
+    keywords: ["erreurs", "débutant", "conseil"],
+    visualQuery: "chantier",
   },
   {
-    id: "suisse-cafe-culture",
-    label: "La Suisse et le café",
+    id: "conseil-service",
+    label: "Le service qui fidélise",
     angle:
-      "Anecdote suisse : densité de cafés, qualité, attentes élevées. Pourquoi un distributeur à Genève ne peut pas “tricher” sur le goût. Histoire locale crédible.",
-    keywords: ["Suisse", "Genève", "café", "qualité"],
-    visualQuery: "geneva cafe terrace switzerland coffee",
-  },
-  {
-    id: "inventeur-oublie",
-    label: "L’inventeur oublié du vending",
-    angle:
-      "Raconter un inventeur / une invention méconnue du distributeur automatique comme un mini-documentaire en 40 secondes, avec une chute surprenante.",
-    keywords: ["invention", "histoire", "distributeur", "anecdote"],
-    visualQuery: "vintage inventor workshop sketch patent",
-  },
-  {
-    id: "cafe-espace",
-    label: "Le café… dans l’espace ?",
-    angle:
-      "Anecdote vraie ou documentée sur le café / boissons chaudes hors du quotidien (avion, espace, extrême). Relier à l’obsession humaine pour le café, puis au distributeur du quotidien.",
-    keywords: ["café", "anecdote", "espace", "curiosité"],
-    visualQuery: "astronaut space station coffee floating",
-  },
-  {
-    id: "cappuccino-mousse",
-    label: "La science de la mousse de lait",
-    angle:
-      "Petite histoire sensorielle : pourquoi la mousse change tout (température, protéines, texture). Rendre ça captivant jusqu’à la dernière phrase, puis lien machine pro.",
-    keywords: ["cappuccino", "mousse lait", "barista", "machine"],
-    visualQuery: "cappuccino milk foam latte art close",
-  },
-  {
-    id: "nuit-des-machines",
-    label: "Ce que fait une machine à 3h du matin",
-    angle:
-      "Scène nocturne : hôpital, entrepôt, station — quelqu’un glisse une carte, un café tombe. Poétique + concret. Pourquoi le vending ne dort jamais.",
-    keywords: ["24h", "nuit", "distributeur", "café"],
-    visualQuery: "night empty hallway vending machine light",
+      "Conseils service client vending : délais d’intervention, communication, pourquoi ça fait rester le client.",
+    keywords: ["service", "fidélisation", "conseil"],
+    visualQuery: "realisation",
   },
 ];
 

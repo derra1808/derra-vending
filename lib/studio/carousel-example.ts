@@ -103,3 +103,34 @@ export function galleryPublicUrl(galleryPath: string): string {
   const path = galleryPath.startsWith("/") ? galleryPath : `/${galleryPath}`;
   return `${getPublicAssetBaseUrl()}${path}`;
 }
+
+/** Liste des vraies photos machines Derra (public/gallery). */
+export const DERRA_GALLERY_PATHS = [
+  ...Array.from({ length: 54 }, (_, i) =>
+    `/gallery/realisation-${String(i + 1).padStart(2, "0")}.png`
+  ),
+  ...Array.from({ length: 16 }, (_, i) =>
+    `/gallery/chantier-${String(i + 1).padStart(2, "0")}.png`
+  ),
+] as const;
+
+/** Tire N photos uniques de ta gallery (URL publique pour Shotstack). */
+export function pickDerraGalleryUrls(
+  count: number,
+  prefer?: "realisation" | "chantier" | "any"
+): string[] {
+  let pool = [...DERRA_GALLERY_PATHS];
+  if (prefer === "chantier") {
+    pool = pool.filter((p) => p.includes("chantier"));
+  } else if (prefer === "realisation") {
+    pool = pool.filter((p) => p.includes("realisation"));
+  }
+  if (pool.length === 0) pool = [...DERRA_GALLERY_PATHS];
+
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j]!, pool[i]!];
+  }
+
+  return pool.slice(0, count).map((p) => galleryPublicUrl(p));
+}

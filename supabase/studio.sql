@@ -4,7 +4,7 @@
 create table if not exists public.studio_settings (
   id int primary key default 1 check (id = 1),
   auto_publish boolean not null default true,
-  daily_quota int not null default 5,
+  daily_quota int not null default 10,
   platforms jsonb not null default '["youtube","tiktok","instagram","facebook"]'::jsonb,
   voice_id text default 'JBFqnCBsd6RMkjVDRZzb',
   cta_url text default 'https://derra-vending.ch/formation',

@@ -84,6 +84,7 @@ export interface GeneratedCarousel {
     bottom: string;
     spoken: string;
     photoQuery: string;
+    pexelsQuery: string;
     durationSec: number;
   }>;
 }
@@ -118,28 +119,30 @@ export async function generateCarouselFromTheme(
     model,
     max_tokens: 2000,
     temperature: 0.95,
-    system: `Tu es un conteur captivant pour ${COMPANY.name} (${COMPANY.region}).
-Tu crées des carrousels TikTok / Shorts en français (Suisse) UNIQUEMENT sur :
-histoire du vending, vraies anecdotes café, machines à café, univers du distributeur.
-Objectif : une HISTOIRE qui donne envie d’écouter jusqu’à la DERNIÈRE seconde (hook fort, tension, chute).
-Pas de catalogue commercial plat. Pas de sujet hors café/vending.
+    system: `Tu es un créateur TikTok viral + coach vending pour ${COMPANY.name} (${COMPANY.region}).
+Tu crées des carrousels Photo qui DOIVENT accrocher en 1 seconde (style FYP), tout en restant des CONSEILS vending concrets.
+Hook curiosité / argent / erreur / secret — phrases punchy, français Suisse, pas corporate.
+Les images = mélange machines Derra + stock dynamique (Pexels) : tu fournis des requêtes Pexels en anglais.
 Réponds UNIQUEMENT en JSON valide (pas de markdown):
-{"title":"...","hook":"...","caption":"...","hashtags":["..."],"slides":[{"top":"...","bottom":"...","spoken":"...","photoQuery":"english pexels query","durationSec":3.8}]}
+{"title":"...","hook":"...","caption":"...","hashtags":["..."],"slides":[{"top":"...","bottom":"...","spoken":"...","photoQuery":"realisation|chantier","pexelsQuery":"english lifestyle query","durationSec":3.8}]}
 Règles:
-- Exactement 5 slides = 5 temps d’une histoire (mise en scène → intrigue → détail choc → révélation → chute/CTA doux)
-- spoken = narration orale alignée avec le texte à l’écran, phrases qui s’enchaînent (8–20 mots)
-- durationSec 3.5–5 ; le rythme doit porter jusqu’à la fin
-- Dernière slide : chute mémorable + mention légère ${COMPANY.name} / café & distributeurs Genève (pas de hard sell agressif)
-- photoQuery en anglais, atmosphère (vintage, café, machine, rue, grains…)
-CTA soft: ${ctaUrl}.`,
+- Exactement 5 slides qui s’enchaînent
+- top = punchline virale courte ; bottom = conseil actionnable
+- spoken = voix (8–18 mots), ton direct, un peu “storytime”
+- durationSec 3.5–5
+- photoQuery = "realisation" ou "chantier" (pour les slides machines)
+- pexelsQuery = 3–6 mots ANGLAIS lifestyle dynamiques liés au conseil (coffee office, construction break, entrepreneur money, snack break…)
+- hashtags: 8–12 SANS # — mélange VIRAL (fyp, pourtoi, viral, business, entrepreneur, sidehustle, argent, motivation…) + NICHE (distributeur, vending, cafe, geneve, derravending). Varie à chaque fois.
+- Dernière slide = CTA doux (commente / abonne-toi / ${COMPANY.name} Genève)
+CTA: ${ctaUrl}.`,
     messages: [
       {
         role: "user",
-        content: `Raconte une histoire NOUVELLE et captivante (varie à chaque fois) sur:
+        content: `Carrousel CONSEILS viral (nouveau à chaque fois) :
 Thème: ${theme.label}
 Angle: ${theme.angle}
 Mots-clés: ${theme.keywords.join(", ")}
-Contrainte: le spectateur doit avoir envie d’aller jusqu’au bout. Seed: ${Date.now()}`,
+Seed: ${Date.now()}`,
       },
     ],
   });
@@ -165,9 +168,17 @@ Contrainte: le spectateur doit avoir envie d’aller jusqu’au bout. Seed: ${Da
       top: top || spoken.slice(0, 60),
       bottom: bottom || " ",
       spoken,
-      photoQuery: String(
-        row.photoQuery || theme.visualQuery || "vending machine"
-      ).trim(),
+      photoQuery: (() => {
+        const raw = String(row.photoQuery || theme.visualQuery || "realisation")
+          .toLowerCase()
+          .trim();
+        if (raw.includes("chantier")) return "chantier";
+        return "realisation";
+      })(),
+      pexelsQuery: String(row.pexelsQuery || "")
+        .replace(/[^\w\s-]/g, " ")
+        .trim()
+        .slice(0, 80),
       durationSec: Math.max(3, Math.min(5.5, Number(row.durationSec) || 3.8)),
     };
   });
@@ -177,7 +188,7 @@ Contrainte: le spectateur doit avoir envie d’aller jusqu’au bout. Seed: ${Da
     hook: String(parsed.hook || slides[0]?.top || theme.label),
     caption: String(parsed.caption || slides.map((x) => x.spoken).join(" ")),
     hashtags: Array.isArray(parsed.hashtags)
-      ? parsed.hashtags.map((h) => String(h).replace(/^#/, "")).slice(0, 10)
+      ? parsed.hashtags.map((h) => String(h).replace(/^#/, "")).slice(0, 12)
       : theme.keywords,
     narration: slides.map((s) => s.spoken).join(". "),
     slides,

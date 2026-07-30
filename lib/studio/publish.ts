@@ -1,5 +1,6 @@
 import type { StudioPlatform } from "./types";
 import { getBrandLogoUrl } from "./render";
+import { nextPublicationDateTime, STUDIO_TIMEZONE } from "./schedule";
 
 const NETWORK_MAP: Record<StudioPlatform, string> = {
   youtube: "youtube",
@@ -8,16 +9,27 @@ const NETWORK_MAP: Record<StudioPlatform, string> = {
   facebook: "facebook",
 };
 
+/** Mix viral (portée) + niche Derra (conversion). */
 const DEFAULT_HASHTAGS = [
-  "histoireducafe",
-  "vending",
+  "fyp",
+  "pourtoi",
+  "foryou",
+  "viral",
+  "business",
+  "entrepreneur",
+  "sidehustle",
+  "argent",
+  "motivation",
+  "astuce",
+  "conseils",
+  "distributeur",
   "distributeurautomatique",
+  "vending",
   "cafe",
   "machineacafe",
   "geneve",
-  "derravending",
-  "espresso",
   "suisse",
+  "derravending",
 ];
 
 function metricoolAuth() {
@@ -51,20 +63,16 @@ async function readBody(res: Response): Promise<unknown> {
   }
 }
 
-function localDateTime(timezone: string, minutesAhead = 3): string {
-  const when = new Date(Date.now() + minutesAhead * 60 * 1000);
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: timezone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).formatToParts(when);
-  const get = (type: string) => parts.find((p) => p.type === type)?.value || "00";
-  return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}:${get("second")}`;
+/** Créneaux vues (matin / midi / aprem / soir Genève). */
+function scheduledPublicationDate(timezone?: string): {
+  dateTime: string;
+  timezone: string;
+} {
+  const next = nextPublicationDateTime();
+  return {
+    dateTime: next.dateTime,
+    timezone: timezone || STUDIO_TIMEZONE || next.timezone,
+  };
 }
 
 export function buildPublishTitle(raw: string | null | undefined): string {
@@ -85,12 +93,23 @@ export function buildPublishHashtags(
         .trim()
     )
     .filter(Boolean);
-  const merged = [...cleaned, ...DEFAULT_HASHTAGS];
+  // Viraux d’abord (algo), puis tags Claude, puis niche marque
+  const viralFirst = DEFAULT_HASHTAGS.filter((t) =>
+    ["fyp", "pourtoi", "foryou", "viral", "business", "entrepreneur", "sidehustle", "argent", "motivation", "astuce"].includes(
+      t.toLowerCase()
+    )
+  );
+  const niche = DEFAULT_HASHTAGS.filter((t) => !viralFirst.includes(t));
+  const merged = [...viralFirst, ...cleaned, ...niche];
   const uniq: string[] = [];
   for (const t of merged) {
     const lower = t.toLowerCase();
     if (!uniq.some((u) => u.toLowerCase() === lower)) uniq.push(t);
-    if (uniq.length >= 20) break;
+    if (uniq.length >= 18) break;
+  }
+  // Garde toujours la marque
+  if (!uniq.some((u) => u.toLowerCase() === "derravending")) {
+    uniq[uniq.length - 1] = "derravending";
   }
   return uniq;
 }
@@ -155,7 +174,9 @@ export async function publishToSocials(opts: {
   platforms: StudioPlatform[];
 }): Promise<Record<string, unknown>> {
   const { token, userId, blogId } = metricoolAuth();
-  const timezone = process.env.METRICOOL_TIMEZONE || "Europe/Zurich";
+  const timezone =
+    process.env.METRICOOL_TIMEZONE || STUDIO_TIMEZONE || "Europe/Zurich";
+  const publicationDate = scheduledPublicationDate(timezone);
 
   const title = buildPublishTitle(opts.title);
   const hashtags = buildPublishHashtags(opts.hashtags);
@@ -210,10 +231,7 @@ export async function publishToSocials(opts: {
           },
         ]
       : [mediaUrl],
-    publicationDate: {
-      dateTime: localDateTime(timezone, 3),
-      timezone,
-    },
+    publicationDate,
     creatorUserId: Number(userId),
   };
 
@@ -323,10 +341,7 @@ async function publishFallbackSimpleMedia(opts: {
     autoPublish: true,
     draft: false,
     media: [opts.mediaUrl],
-    publicationDate: {
-      dateTime: localDateTime(opts.timezone, 3),
-      timezone: opts.timezone,
-    },
+    publicationDate: scheduledPublicationDate(opts.timezone),
     creatorUserId: Number(opts.userId),
     tiktokData: {
       title: opts.title.slice(0, 150),

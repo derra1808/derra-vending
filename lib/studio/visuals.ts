@@ -1,5 +1,6 @@
 import {
   galleryPublicUrl,
+  pickDerraGalleryUrls,
   type CarouselSlide,
 } from "./carousel-example";
 
@@ -8,6 +9,100 @@ export interface VisualAsset {
   /** Preview/still (utile pour templates Shotstack image-based) */
   imageUrl?: string;
   photographer?: string;
+}
+
+const LIFESTYLE_PEXELS_FALLBACKS = [
+  "coffee break office portrait",
+  "espresso machine cafe",
+  "construction site worker break",
+  "entrepreneur working laptop",
+  "vending machine snacks",
+  "office team coffee",
+  "warehouse logistics boxes",
+  "small business owner portrait",
+];
+
+/**
+ * Équilibre ~60% photos machines Derra / ~40% Pexels dynamique.
+ * Sur 5 slides : 3 Derra + 2 Pexels (slots Pexels variables).
+ */
+export async function resolveMixedDerraPexelsSlides(
+  slides: ReadonlyArray<{
+    top: string;
+    bottom: string;
+    durationSec: number;
+    photoQuery?: string;
+    pexelsQuery?: string;
+  }>
+): Promise<
+  Array<{
+    imageUrl: string;
+    top: string;
+    bottom: string;
+    durationSec: number;
+  }>
+> {
+  const n = slides.length;
+  // 2 slots Pexels sur 5 (ou ~40%) — pas la 1re ni la dernière (hook/CTA = machines)
+  const pexelsSlots = new Set<number>();
+  if (n >= 3) {
+    const candidates = Array.from({ length: n - 2 }, (_, i) => i + 1);
+    for (let i = candidates.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [candidates[i], candidates[j]] = [candidates[j]!, candidates[i]!];
+    }
+    const take = Math.max(1, Math.round(n * 0.4));
+    for (const idx of candidates.slice(0, take)) pexelsSlots.add(idx);
+  }
+
+  const used = new Set<string>();
+  const out: Array<{
+    imageUrl: string;
+    top: string;
+    bottom: string;
+    durationSec: number;
+  }> = [];
+
+  for (let i = 0; i < n; i++) {
+    const slide = slides[i]!;
+    let imageUrl: string | null = null;
+
+    if (pexelsSlots.has(i)) {
+      const q =
+        (slide.pexelsQuery || "").trim() ||
+        LIFESTYLE_PEXELS_FALLBACKS[i % LIFESTYLE_PEXELS_FALLBACKS.length]!;
+      try {
+        const photos = await fetchPexelsPhotos(q, 4);
+        const pick = photos.find((p) => {
+          const u = p.imageUrl || p.url;
+          return u && !used.has(u);
+        });
+        if (pick) imageUrl = pick.imageUrl || pick.url;
+      } catch {
+        // fallback gallery ci-dessous
+      }
+    }
+
+    if (!imageUrl) {
+      const prefer =
+        slide.photoQuery === "chantier" ? "chantier" : "realisation";
+      let urls = pickDerraGalleryUrls(8, prefer).filter((u) => !used.has(u));
+      if (urls.length === 0) {
+        urls = pickDerraGalleryUrls(8, "any").filter((u) => !used.has(u));
+      }
+      imageUrl = urls[0] || pickDerraGalleryUrls(1)[0]!;
+    }
+
+    used.add(imageUrl);
+    out.push({
+      imageUrl,
+      top: slide.top,
+      bottom: slide.bottom,
+      durationSec: slide.durationSec,
+    });
+  }
+
+  return out;
 }
 
 /**
