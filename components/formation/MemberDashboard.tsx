@@ -11,9 +11,56 @@ import {
   FolderDown,
 } from "lucide-react";
 import { EBOOK_PARTS, FORMATION } from "@/lib/formation/content";
-import { MEMBER_DOWNLOADS, MEMBER_VIDEOS } from "@/lib/formation/offer";
+import { MEMBER_DOWNLOADS, MEMBER_VIDEOS, PART_AVATAR_VIDEO } from "@/lib/formation/offer";
+import { FormationAudioPlayer } from "@/components/formation/FormationAudioPlayer";
 
 type Tab = "formation" | "bonus" | "videos";
+
+function PartMedia({
+  partId,
+  image,
+  title,
+}: {
+  partId: number;
+  image?: string;
+  title: string;
+}) {
+  const avatar = PART_AVATAR_VIDEO[partId];
+  const [showImage, setShowImage] = useState(!avatar);
+
+  if (avatar && !showImage) {
+    return (
+      <div className="relative bg-black">
+        <video
+          className="aspect-video w-full max-h-[85vh] object-contain"
+          controls
+          playsInline
+          preload="metadata"
+          poster={image}
+          src={`/api/formation/video/${avatar.id}`}
+          onError={() => setShowImage(true)}
+        >
+          Ton navigateur ne lit pas la vidéo.
+        </video>
+        <p
+          className="formation-label absolute left-3 top-3 px-2 py-1 text-[9px]"
+          style={{ background: "color-mix(in srgb, var(--d-night) 75%, transparent)", color: "var(--d-gold)" }}
+        >
+          Avatar HeyGen
+        </p>
+      </div>
+    );
+  }
+
+  if (!image) return null;
+
+  return (
+    <div className="formation-anime-wrap">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={image} alt={`Illustration — ${title}`} className="formation-anime-img" />
+    </div>
+  );
+}
 
 export function MemberDashboard({ displayName }: { displayName: string }) {
   const [tab, setTab] = useState<Tab>("formation");
@@ -27,13 +74,13 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
   ];
 
   return (
-    <div className="section-night px-6 py-24 md:py-32">
-      <div className="mx-auto max-w-4xl">
+    <div className="section-night w-full px-0 py-6 md:py-8">
+      <div className="mx-auto w-full max-w-none px-3 sm:px-4 md:px-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="formation-label">Espace membre</p>
-            <h1 className="formation-title mt-4 text-3xl">Bienvenue, {displayName}</h1>
-            <p className="formation-body mt-2 text-sm">
+            <h1 className="formation-title mt-4 text-3xl md:text-4xl lg:text-5xl">Bienvenue, {displayName}</h1>
+            <p className="formation-body mt-2 text-sm md:text-base">
               Pack complet — {FORMATION.title} · {FORMATION.ebookPrice} {FORMATION.currency}
             </p>
           </div>
@@ -73,50 +120,50 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
         </nav>
 
         {tab === "formation" && (
-          <div className="mt-10 space-y-6">
+          <div className="mt-8 space-y-5 md:mt-10 md:space-y-6">
+            <FormationAudioPlayer />
             {EBOOK_PARTS.map((part) => (
-              <article key={part.id} id={`partie-${part.id}`} className="formation-card overflow-hidden p-0">
-                {"image" in part && part.image && (
-                  <div className="formation-anime-wrap">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={part.image}
-                      alt={`Illustration — ${part.title}`}
-                      className="formation-anime-img"
-                    />
-                  </div>
-                )}
-                <div className="p-8">
+              <article
+                key={part.id}
+                id={`partie-${part.id}`}
+                className="formation-card w-full overflow-hidden p-0"
+              >
+                <PartMedia
+                  partId={part.id}
+                  image={"image" in part ? part.image : undefined}
+                  title={part.title}
+                />
+                <div className="p-5 sm:p-8 md:p-10 lg:px-14 lg:py-12">
                   <span className="formation-label">Partie {part.id}</span>
                   <div className="mt-4 max-w-none">
                     {part.content.split("\n").map((line, i) => {
                       if (line.startsWith("## "))
                         return (
-                          <h2 key={i} className="formation-title mt-4 text-2xl">
+                          <h2 key={i} className="formation-title mt-6 text-3xl md:text-4xl">
                             {line.replace("## ", "")}
                           </h2>
                         );
                       if (line.startsWith("### "))
                         return (
-                          <h3 key={i} className="formation-accent mt-4 text-lg font-semibold">
+                          <h3 key={i} className="formation-accent mt-6 text-xl md:text-2xl font-semibold">
                             {line.replace("### ", "")}
                           </h3>
                         );
                       if (line.startsWith("- "))
                         return (
-                          <li key={i} className="formation-body ml-4 text-sm">
+                          <li key={i} className="formation-body ml-5 text-base md:text-lg">
                             {line.replace("- ", "")}
                           </li>
                         );
                       if (line.startsWith("*") && line.endsWith("*"))
                         return (
-                          <p key={i} className="formation-body mt-2 text-sm italic">
+                          <p key={i} className="formation-body mt-3 text-base md:text-lg italic">
                             {line.replace(/\*/g, "")}
                           </p>
                         );
                       if (line.trim())
                         return (
-                          <p key={i} className="formation-body mt-2 text-sm">
+                          <p key={i} className="formation-body mt-3 text-base md:text-lg leading-relaxed">
                             {line}
                           </p>
                         );
@@ -235,10 +282,10 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
         )}
 
         <div className="formation-tip mt-12 text-center">
-          <p className="formation-label">Coaching</p>
+          <p className="formation-label">Appel</p>
           <h2 className="formation-title text-xl">Besoin d&apos;aller plus loin ?</h2>
           <p className="formation-body mt-2 text-sm">
-            Appel Q&R (150 CHF) ou accompagnement complet (490 CHF) avec contacts fournisseurs.
+            Appel Q&R ({FORMATION.coachingCallPrice} CHF) : tes questions + accès à mes fournisseurs (machines & consommables).
           </p>
           <Link href="/formation/pricing" className="formation-btn-primary mt-6 inline-flex">
             Voir les options

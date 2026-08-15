@@ -1,7 +1,10 @@
-/** Offre pack 50 CHF — stack, FAQ, garantie, bonus, vidéos */
+/** Offre pack formation — stack, FAQ, garantie, bonus, vidéos */
 export const FORMATION_OFFER = {
-  ebookPrice: 50,
-  ebookOriginalPrice: 147,
+  ebookPrice: 150,
+  ebookOriginalPrice: 297,
+  snackPrice: 150,
+  packPrice: 250,
+  callPrice: 300,
   currency: "CHF",
   guaranteeDays: 14,
   guaranteeText:
@@ -78,7 +81,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Est-ce que j’ai les contacts fournisseurs ?",
-    a: "Le pack 50 CHF = méthode + outils (contrat, scripts, checklist, calculateur). Les contacts directs négociés sont réservés à l’accompagnement complet.",
+    a: "Dans la formation : où chercher (Facebook Marketplace, Leboncoin, Anibis…). Les contacts fournisseurs négociés d’Ibrahim sont dans l’appel Q&R.",
   },
   {
     q: "Combien de temps pour lire et appliquer ?",
@@ -93,8 +96,8 @@ export const FAQ_ITEMS = [
     a: "Garantie 14 jours : contacte-nous avec ton email d’achat. Produit numérique, accès immédiat.",
   },
   {
-    q: "Différence avec le coaching ?",
-    a: "Pack 50 CHF = autonomie. Appel 150 CHF = questions sur ta situation. Accompagnement 490 CHF = suivi + contacts fournisseurs.",
+    q: "Différence avec l’appel ?",
+    a: "Formation café ou snack (150 CHF) = méthode seule. Pack 250 = les 2. Appel 300 CHF = 1h avec Ibrahim + accès à ses fournisseurs.",
   },
   {
     q: "Et le cadre légal ?",
@@ -112,6 +115,20 @@ export const MEMBER_VIDEOS = [
     description: "Qui je suis, le modèle dépôt gratuit, ce que tu vas apprendre.",
     filename: "01-presentation.mp4",
     duration: "≈ 2 min",
+  },
+  {
+    id: "part-1",
+    title: "Partie 1 — Le business model (avatar HeyGen)",
+    description: "Ibrahim t’explique le dépôt gratuit, les marges et la règle d’or.",
+    filename: "part-1-heygen.mp4",
+    duration: "≈ 2 min",
+  },
+  {
+    id: "part-2",
+    title: "Partie 2 — Prospection (avatar HeyGen)",
+    description: "Entourage, porte-à-porte, réseaux, effet boule de neige.",
+    filename: "part-2-heygen.mp4",
+    duration: "COMPLETE",
   },
   {
     id: "business-model",
@@ -149,6 +166,14 @@ export const MEMBER_VIDEOS = [
     duration: "À venir",
   },
 ] as const;
+
+/** Vidéo avatar HeyGen par partie (si le fichier existe) */
+export const PART_AVATAR_VIDEO: Partial<
+  Record<number, { id: string; filename: string }>
+> = {
+  1: { id: "part-1", filename: "part-1-heygen.mp4" },
+  2: { id: "part-2", filename: "part-2-heygen.mp4" },
+};
 
 export const MEMBER_DOWNLOADS = [
   {
