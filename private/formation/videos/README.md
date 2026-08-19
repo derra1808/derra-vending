@@ -7,6 +7,6 @@ Place ici tes fichiers MP4 (mêmes noms) :
 - 03-prospection.mp4
 - 04-machines.mp4
 - 05-gestion.mp4
-- 06-chiffres.mp4
+- cynara-recolte.mp4 (récolte & chiffres chantier Cynara)
 
 Servis uniquement aux membres via /api/formation/video/[id]

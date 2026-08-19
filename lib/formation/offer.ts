@@ -131,6 +131,13 @@ export const MEMBER_VIDEOS = [
     duration: "COMPLETE",
   },
   {
+    id: "cynara-recolte",
+    title: "Récolte & chiffres — chantier Cynara",
+    description: "Terrain réel : récolte et chiffres de nos machines sur un chantier.",
+    filename: "cynara-recolte.mp4",
+    duration: "≈ 9 min",
+  },
+  {
     id: "business-model",
     title: "Partie 1 — Le business model",
     description: "0,85 CHF, marges, contrat, pourquoi le commerçant dit oui.",
@@ -156,13 +163,6 @@ export const MEMBER_VIDEOS = [
     title: "Partie 4 — Gestion au quotidien",
     description: "Rinçage, tournée mensuelle, stock, entretien.",
     filename: "05-gestion.mp4",
-    duration: "À venir",
-  },
-  {
-    id: "chiffres",
-    title: "Partie 5 — Les chiffres réels",
-    description: "Volumes, point mort, projection sur un parc.",
-    filename: "06-chiffres.mp4",
     duration: "À venir",
   },
 ] as const;
