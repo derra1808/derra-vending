@@ -6,9 +6,7 @@ type Product = (typeof FORMATION_PRODUCTS)[number];
 
 function offerHref(p: Product) {
   if (p.id === "call") return "/formation/pricing#appel";
-  if (p.id === "cafe") return "/formation/pricing#cafe";
-  if (!p.available) return "/formation/pricing#cafe";
-  return "/formation/pricing";
+  return "/formation/pricing#cafe";
 }
 
 export function OfferCard({
@@ -65,13 +63,7 @@ export function OfferCard({
       </ul>
 
       <span
-        className={`mt-8 inline-flex w-full items-center justify-center gap-2 ${
-          p.available
-            ? isNight
-              ? "formation-btn-primary"
-              : "formation-btn-primary"
-            : "formation-offer-cta-soon"
-        }`}
+        className="formation-btn-primary mt-8 inline-flex w-full items-center justify-center gap-2"
       >
         {p.cta}
         <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
