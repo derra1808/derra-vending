@@ -1,7 +1,7 @@
 /** Offre pack formation — stack, FAQ, garantie, bonus, vidéos */
 export const FORMATION_OFFER = {
-  ebookPrice: 150,
-  ebookOriginalPrice: 297,
+  ebookPrice: 47,
+  ebookOriginalPrice: 150,
   snackPrice: 150,
   packPrice: 250,
   callPrice: 100,
@@ -107,7 +107,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Différence avec l’appel ?",
-    a: "Formation café ou snack (150 CHF) = méthode seule. Pack 250 = les 2. Appel 100 CHF = 1h avec Ibrahim + accès à ses fournisseurs.",
+    a: "Pack méthode (47 CHF) = ebook, bonus, audio, vidéos. Appel 100 CHF = 1h avec Ibrahim + accès à ses fournisseurs.",
   },
   {
     q: "Et le cadre légal ?",

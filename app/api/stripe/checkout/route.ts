@@ -53,22 +53,36 @@ export async function POST(request: Request) {
       "http://localhost:3000";
 
     const lineItems =
-      product === "coaching_call"
+      product === "ebook"
         ? [
             {
               price_data: {
                 currency: "chf",
-                unit_amount: FORMATION.coachingCallPrice * 100,
+                unit_amount: FORMATION.ebookPrice * 100,
                 product_data: {
-                  name: "Appel Q&R + fournisseurs — Derra Vending",
-                  description:
-                    "1 heure avec Ibrahim + accès à ses contacts fournisseurs.",
+                  name: "Pack méthode — Le Café en Dépôt Gratuit",
+                  description: "Ebook, bonus, audio, vidéos, 50 Q/R — accès membre.",
                 },
               },
               quantity: 1,
             },
           ]
-        : [{ price: getPriceId(product), quantity: 1 }];
+        : product === "coaching_call"
+          ? [
+              {
+                price_data: {
+                  currency: "chf",
+                  unit_amount: FORMATION.coachingCallPrice * 100,
+                  product_data: {
+                    name: "Appel Q&R + fournisseurs — Derra Vending",
+                    description:
+                      "1 heure avec Ibrahim + accès à ses contacts fournisseurs.",
+                  },
+                },
+                quantity: 1,
+              },
+            ]
+          : [{ price: getPriceId(product), quantity: 1 }];
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
