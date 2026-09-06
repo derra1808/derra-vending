@@ -30,7 +30,7 @@ export const FORMATION_PRODUCTS = [
       "Méthode dépôt gratuit café",
       "Bonus PDF + 50 Q/R terrain + audio + vidéos",
       "Où trouver tes machines (occasion)",
-      "Accès espace membre",
+      "Plus : transposer la méthode au snack",
     ],
     cta: "Commencer — 47 CHF",
     product: "ebook" as const,
@@ -85,7 +85,7 @@ export const LANDING_BENEFITS = [
   "Le modèle exact : 0,85 CHF/tasse, marges, contrat",
   "Comment trouver et convaincre les commerçants",
   "Où trouver tes machines (Leboncoin, Marketplace…) + stock & tournée",
-  "Bonus : contrat, scripts, checklist, calculateur, 50 Q/R",
+  "Bonus : contrat, scripts, checklist, calculateur, 50 Q/R, plus snack",
   "Espace vidéo membre + lecture audio",
 ] as const;
 

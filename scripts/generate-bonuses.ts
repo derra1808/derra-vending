@@ -12,6 +12,13 @@ import {
   BONUS_SCRIPTS,
 } from "../lib/formation/bonus-content.ts";
 import { QA50_CATEGORIES, QA50_SUBTITLE, QA50_TITLE } from "../lib/formation/qa-50.ts";
+import {
+  SNACK_PLUS_DIFF,
+  SNACK_PLUS_ITEMS,
+  SNACK_PLUS_SAME,
+  SNACK_PLUS_SUBTITLE,
+  SNACK_PLUS_TITLE,
+} from "../lib/formation/snack-plus.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const outDir = resolve(__dirname, "../private/formation");
@@ -524,6 +531,91 @@ function writeQa50(): Promise<void> {
   });
 }
 
+function writeSnackPlus(): Promise<void> {
+  return new Promise((res, rej) => {
+    const doc = new PDFDocument({
+      size: "A4",
+      margins: { top: 0, bottom: 0, left: MARGIN, right: MARGIN },
+      info: { Title: SNACK_PLUS_TITLE, Author: "Derra Vending" },
+    });
+    const stream = createWriteStream(resolve(outDir, "plus-snack.pdf"));
+    doc.pipe(stream);
+    const page = { n: 1 };
+    const label = SNACK_PLUS_TITLE;
+    const limit = FOOTER_Y - 16;
+
+    function newPage() {
+      drawFooter(doc, label, page.n);
+      doc.addPage();
+      fillCream(doc);
+      page.n += 1;
+      doc.rect(0, 0, PAGE_W, 28).fill(NIGHT);
+      doc
+        .fillColor(GOLD)
+        .font("Helvetica-Bold")
+        .fontSize(8)
+        .text("DERRA VENDING  ·  BONUS", MARGIN, 10, { width: CONTENT_W });
+      doc.rect(0, 28, PAGE_W, 2).fill(GOLD);
+      doc.y = 48;
+    }
+
+    drawHeader(doc, "PLUS", SNACK_PLUS_TITLE, SNACK_PLUS_SUBTITLE);
+
+    for (const [title, lines] of [
+      ["Pareil que le café", SNACK_PLUS_SAME],
+      ["Ce qui change", SNACK_PLUS_DIFF],
+    ] as const) {
+      if (doc.y + 80 > limit) newPage();
+      const y = doc.y;
+      doc.rect(MARGIN, y, 4, 16).fill(GOLD);
+      doc
+        .fillColor(NIGHT)
+        .font("Helvetica-Bold")
+        .fontSize(11)
+        .text(title, MARGIN + 14, y + 1, { width: CONTENT_W - 14 });
+      doc.y = y + 22;
+      for (const line of lines) {
+        doc.font("Helvetica").fontSize(9.5);
+        const h = doc.heightOfString(`— ${line}`, { width: CONTENT_W, lineGap: 1.5 });
+        if (doc.y + h + 6 > limit) newPage();
+        doc
+          .fillColor(TEXT)
+          .text(`— ${line}`, MARGIN, doc.y, { width: CONTENT_W, lineGap: 1.5 });
+        doc.y += 4;
+      }
+      doc.y += 8;
+    }
+
+    let n = 0;
+    for (const item of SNACK_PLUS_ITEMS) {
+      n += 1;
+      const q = `${String(n).padStart(2, "0")}. ${item.q}`;
+      doc.font("Helvetica-Bold").fontSize(10);
+      const qH = doc.heightOfString(q, { width: CONTENT_W, lineGap: 1.5 });
+      doc.font("Helvetica").fontSize(9.5);
+      const aH = doc.heightOfString(item.a, { width: CONTENT_W, lineGap: 1.5 });
+      if (doc.y + qH + aH + 16 > limit) newPage();
+      doc
+        .fillColor(NIGHT)
+        .font("Helvetica-Bold")
+        .fontSize(10)
+        .text(q, MARGIN, doc.y, { width: CONTENT_W, lineGap: 1.5 });
+      doc.y += 4;
+      doc
+        .fillColor(TEXT)
+        .font("Helvetica")
+        .fontSize(9.5)
+        .text(item.a, MARGIN, doc.y, { width: CONTENT_W, lineGap: 1.5 });
+      doc.y += 10;
+    }
+
+    drawFooter(doc, label, page.n);
+    doc.end();
+    stream.on("finish", () => res());
+    stream.on("error", rej);
+  });
+}
+
 function writeVideoReadme() {
   const readme = `# Vidéos formation — Derra Vending
 
@@ -563,6 +655,7 @@ async function main() {
   await writeChecklist();
   await writeCalculator();
   await writeQa50();
+  await writeSnackPlus();
   writeVideoReadme();
   await syncEbook();
   console.log(`✅ Bonus PDF générés dans ${outDir}`);

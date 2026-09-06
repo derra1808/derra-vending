@@ -94,7 +94,7 @@ export const QA50_CATEGORIES = [
       },
       {
         q: "Snack et café, je mélange sur la même machine ?",
-        a: "Non. Café = machine café. Snack = distributeur snack. Ce sont deux métiers. La formation snack arrive à part.",
+        a: "Non. Deux machines. La méthode (spot, dépôt, tournée) est la même — le détail snack est dans le plus du pack, pas dans une 2e formation.",
       },
       {
         q: "Si la machine tombe en panne, je fais quoi ?",

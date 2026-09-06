@@ -49,6 +49,12 @@ export const VALUE_STACK = [
     value: 39,
   },
   {
+    id: "snack-plus",
+    name: "Plus — Snack (même méthode)",
+    description: "Ce qui est pareil que le café, ce qui change, 10 Q/R.",
+    value: 19,
+  },
+  {
     id: "videos",
     name: "Espace vidéo membre",
     description: "Modules vidéo à regarder dans ton espace (mises à jour).",
@@ -226,6 +232,13 @@ export const MEMBER_DOWNLOADS = [
     label: "50 questions / réponses terrain",
     description: "Emplacement, entretien, autorisation, machines, chiffres",
     file: "50-questions-terrain.pdf",
+    type: "pdf" as const,
+  },
+  {
+    id: "snack-plus",
+    label: "Plus — Snack",
+    description: "Même méthode que le café, ce qui change vraiment",
+    file: "plus-snack.pdf",
     type: "pdf" as const,
   },
 ] as const;
