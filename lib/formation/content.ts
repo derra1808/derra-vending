@@ -1,14 +1,108 @@
+/** Grille tarifaire Derra Formation */
 export const FORMATION = {
   title: "Le Café en Dépôt Gratuit",
   subtitle:
     "Tu poses une machine chez un commerçant. Il ne paie rien. Toi, tu gagnes sur chaque tasse.",
   tagline: "MÉTHODE TERRAIN · EUROPE · 40 MACHINES",
-  ebookPrice: 50,
-  ebookOriginalPrice: 147,
+  /** Formation café */
+  ebookPrice: 150,
+  ebookOriginalPrice: 297,
+  snackPrice: 150,
+  snackOriginalPrice: 297,
+  packPrice: 250,
+  packOriginalPrice: 300,
   currency: "CHF",
-  coachingCallPrice: 150,
-  coachingFullPrice: 490,
+  coachingCallPrice: 300,
+  coachingFullPrice: 300,
 } as const;
+
+export const FORMATION_PRODUCTS = [
+  {
+    id: "cafe",
+    name: "Formation café",
+    price: FORMATION.ebookPrice,
+    originalPrice: FORMATION.ebookOriginalPrice,
+    role: "Méthode seule",
+    badge: "Dispo maintenant",
+    hook: "La méthode terrain — accès immédiat",
+    description: "Le Café en Dépôt Gratuit — ebook, bonus, audio, vidéos.",
+    features: [
+      "Méthode dépôt gratuit café",
+      "Bonus PDF + 50 Q/R terrain + audio + vidéos",
+      "Où trouver tes machines (occasion)",
+      "Accès espace membre",
+    ],
+    cta: "Commencer — 150 CHF",
+    product: "ebook" as const,
+    available: true,
+    highlight: false,
+    featured: true,
+  },
+  {
+    id: "snack",
+    name: "Formation snack",
+    price: FORMATION.snackPrice,
+    originalPrice: FORMATION.snackOriginalPrice,
+    role: "Méthode seule",
+    badge: "Bientôt",
+    hook: "Même modèle, autre produit",
+    description: "Distributeurs snack — même logique, autre produit.",
+    features: [
+      "Méthode snack en dépôt / emplacement",
+      "Assortiment & marges",
+      "Prospection & gestion",
+      "Accès espace membre snack",
+    ],
+    cta: "Me prévenir à la sortie",
+    product: "snack" as const,
+    available: false,
+    highlight: false,
+    featured: false,
+  },
+  {
+    id: "pack",
+    name: "Pack café + snack",
+    price: FORMATION.packPrice,
+    originalPrice: FORMATION.packOriginalPrice,
+    role: "Les 2 formations",
+    badge: "−50 CHF",
+    hook: "Les deux métiers, un seul prix",
+    description: "Café + snack ensemble — tu économises 50 CHF.",
+    features: [
+      "Formation café complète",
+      "Formation snack complète",
+      "Tous les bonus",
+      "Un seul accès membre",
+    ],
+    cta: "Réserver le pack — bientôt",
+    product: "pack" as const,
+    available: false,
+    highlight: true,
+    featured: false,
+  },
+  {
+    id: "call",
+    name: "Appel Q&R (1h)",
+    price: FORMATION.coachingCallPrice,
+    originalPrice: null,
+    role: "Questions + mes fournisseurs",
+    badge: "Fournisseurs inclus",
+    hook: "1h avec moi + mes contacts",
+    description:
+      "1 heure en visio : on règle ta situation, et tu repars avec mes contacts fournisseurs.",
+    features: [
+      "Accès à mes fournisseurs (machines & consommables)",
+      "Réponses sur ton projet concret",
+      "Plan d’action personnalisé",
+      "Café et/ou snack",
+    ],
+    cta: "Réserver l’appel — 300 CHF",
+    product: "coaching_call" as const,
+    available: true,
+    highlight: true,
+    featured: false,
+  },
+] as const;
 
 export const FOUNDER_STORY = {
   intro: "Maçon CFC à Genève. 6'700 CHF brut. Puis 5 machines et moins de 500 CHF/mois. Aujourd'hui : 40 machines.",
@@ -32,9 +126,9 @@ export const FOUNDER_STORY = {
 export const LANDING_BENEFITS = [
   "Le modèle exact : 0,85 CHF/tasse, marges, contrat",
   "Comment trouver et convaincre les commerçants",
-  "Machines, stock, tournée — le quotidien sans surprise",
-  "Bonus : contrat, scripts, checklist, calculateur",
-  "Espace vidéo membre",
+  "Où trouver tes machines (Leboncoin, Marketplace…) + stock & tournée",
+  "Bonus : contrat, scripts, checklist, calculateur, 50 Q/R",
+  "Espace vidéo membre + lecture audio",
 ] as const;
 
 export const MODULES = [
@@ -53,8 +147,8 @@ export const MODULES = [
   {
     id: 3,
     title: "Machines & stock",
-    description: "Occasion, Gaggia, consommables.",
-    lessons: ["Où acheter", "Profital"],
+    description: "Occasion, Leboncoin, Marketplace, Gaggia.",
+    lessons: ["Leboncoin / Marketplace", "Profital"],
   },
   {
     id: 4,
@@ -91,27 +185,21 @@ export const TESTIMONIALS_FORMATION = [
   },
 ] as const;
 
+/** @deprecated utiliser FORMATION_PRODUCTS — gardé pour compat */
 export const COACHING_OPTIONS = [
   {
     id: "call",
-    name: "Appel Q&R",
-    price: 150,
-    description: "1 heure en visio pour répondre à toutes vos questions sur votre projet vending.",
-    features: ["Analyse de votre situation", "Réponses directes et concrètes", "Plan d'action personnalisé"],
-    stripePriceEnv: "STRIPE_PRICE_COACHING_CALL",
-  },
-  {
-    id: "full",
-    name: "Accompagnement complet",
-    price: 490,
-    description: "Suivi sur 30 jours : de l'idée à votre première machine installée.",
+    name: "Appel Q&R + fournisseurs",
+    price: FORMATION.coachingCallPrice,
+    description:
+      "1 heure en visio : on règle ta situation, et tu repars avec mes contacts fournisseurs (machines + consommables) — ceux que j’utilise.",
     features: [
-      "4 sessions de coaching",
-      "Aide à la prospection d'emplacements",
-      "Revue de vos contrats",
-      "Support WhatsApp prioritaire",
+      "Accès à mes fournisseurs (machines & consommables)",
+      "Réponses sur ton projet concret",
+      "Plan d’action personnalisé",
+      "Analyse de ta situation (café / snack)",
     ],
-    stripePriceEnv: "STRIPE_PRICE_COACHING_FULL",
+    stripePriceEnv: "STRIPE_PRICE_COACHING_CALL",
     popular: true,
   },
 ] as const;

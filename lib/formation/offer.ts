@@ -43,6 +43,12 @@ export const VALUE_STACK = [
     value: 29,
   },
   {
+    id: "qa50",
+    name: "Bonus — 50 questions / réponses terrain",
+    description: "Emplacement, entretien, autorisation, neuf vs occasion, chiffres.",
+    value: 39,
+  },
+  {
     id: "videos",
     name: "Espace vidéo membre",
     description: "Modules vidéo à regarder dans ton espace (mises à jour).",
@@ -90,6 +96,10 @@ export const FAQ_ITEMS = [
   {
     q: "Y a-t-il des vidéos ?",
     a: "Oui — espace vidéo dans ton espace membre (présentation, prospection, machines, tournée…). Mis à jour au fur et à mesure.",
+  },
+  {
+    q: "Vous avez un Q&A type 50 ou 80 questions ?",
+    a: "Oui — 50 questions / réponses terrain dans l’espace membre (lisible + PDF) : emplacement, entretien, autorisation, neuf vs occasion, chiffres. Pas 80 pages de remplissage : les questions que les gens posent vraiment.",
   },
   {
     q: "Et si ça ne me convient pas ?",
@@ -209,6 +219,13 @@ export const MEMBER_DOWNLOADS = [
     label: "Calculateur de marges",
     description: "Tableau marges, point mort et parc — à annoter",
     file: "calculateur-marges.pdf",
+    type: "pdf" as const,
+  },
+  {
+    id: "qa50",
+    label: "50 questions / réponses terrain",
+    description: "Emplacement, entretien, autorisation, machines, chiffres",
+    file: "50-questions-terrain.pdf",
     type: "pdf" as const,
   },
 ] as const;

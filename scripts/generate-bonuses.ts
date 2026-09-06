@@ -11,6 +11,7 @@ import {
   BONUS_CONTRAT,
   BONUS_SCRIPTS,
 } from "../lib/formation/bonus-content.ts";
+import { QA50_CATEGORIES, QA50_SUBTITLE, QA50_TITLE } from "../lib/formation/qa-50.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const outDir = resolve(__dirname, "../private/formation");
@@ -441,6 +442,44 @@ Marge parc = Marge mensuelle × Nombre de machines`,
   });
 }
 
+function writeQa50(): Promise<void> {
+  return new Promise((res, rej) => {
+    const doc = new PDFDocument({
+      size: "A4",
+      margins: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN },
+      info: { Title: QA50_TITLE, Author: "Derra Vending" },
+    });
+    const stream = createWriteStream(resolve(outDir, "50-questions-terrain.pdf"));
+    doc.pipe(stream);
+    const page = { n: 1 };
+    const label = QA50_TITLE;
+
+    drawHeader(doc, "BONUS", QA50_TITLE, QA50_SUBTITLE);
+
+    let n = 0;
+    for (const cat of QA50_CATEGORIES) {
+      sectionTitle(doc, cat.title, label, page);
+      for (const item of cat.items) {
+        n += 1;
+        const q = `${String(n).padStart(2, "0")}. ${item.q}`;
+        ensureSpace(doc, 42, label, page);
+        doc
+          .fillColor(NIGHT)
+          .font("Helvetica-Bold")
+          .fontSize(10)
+          .text(q, MARGIN, doc.y, { width: CONTENT_W, lineGap: 1.5 });
+        doc.moveDown(0.15);
+        bodyText(doc, item.a, label, page);
+      }
+    }
+
+    drawFooter(doc, label, page.n);
+    doc.end();
+    stream.on("finish", () => res());
+    stream.on("error", rej);
+  });
+}
+
 function writeVideoReadme() {
   const readme = `# Vidéos formation — Derra Vending
 
@@ -451,7 +490,7 @@ Place ici tes fichiers MP4 (mêmes noms) :
 - 03-prospection.mp4
 - 04-machines.mp4
 - 05-gestion.mp4
-- 06-chiffres.mp4
+- cynara-recolte.mp4 (récolte & chiffres chantier Cynara)
 
 Servis uniquement aux membres via /api/formation/video/[id]
 `;
@@ -479,6 +518,7 @@ async function main() {
   await writeScripts();
   await writeChecklist();
   await writeCalculator();
+  await writeQa50();
   writeVideoReadme();
   await syncEbook();
   console.log(`✅ Bonus PDF générés dans ${outDir}`);

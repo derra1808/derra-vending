@@ -13,6 +13,7 @@ import {
 import { EBOOK_PARTS, FORMATION } from "@/lib/formation/content";
 import { MEMBER_DOWNLOADS, MEMBER_VIDEOS, PART_AVATAR_VIDEO } from "@/lib/formation/offer";
 import { FormationAudioPlayer } from "@/components/formation/FormationAudioPlayer";
+import { FormationQa50 } from "@/components/formation/FormationQa50";
 
 type Tab = "formation" | "bonus" | "videos";
 
@@ -218,6 +219,9 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
                 <Download className="h-4 w-4 shrink-0" style={{ color: "var(--d-gold)" }} />
               </a>
             ))}
+            <div className="pt-8">
+              <FormationQa50 />
+            </div>
           </div>
         )}
 
