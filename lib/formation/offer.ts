@@ -4,7 +4,7 @@ export const FORMATION_OFFER = {
   ebookOriginalPrice: 297,
   snackPrice: 150,
   packPrice: 250,
-  callPrice: 300,
+  callPrice: 100,
   currency: "CHF",
   guaranteeDays: 14,
   guaranteeText:
@@ -107,7 +107,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Différence avec l’appel ?",
-    a: "Formation café ou snack (150 CHF) = méthode seule. Pack 250 = les 2. Appel 300 CHF = 1h avec Ibrahim + accès à ses fournisseurs.",
+    a: "Formation café ou snack (150 CHF) = méthode seule. Pack 250 = les 2. Appel 100 CHF = 1h avec Ibrahim + accès à ses fournisseurs.",
   },
   {
     q: "Et le cadre légal ?",

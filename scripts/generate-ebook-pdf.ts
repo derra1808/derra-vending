@@ -291,7 +291,7 @@ async function generate() {
     doc,
     {
       type: "p",
-      text: "Ce guide te donne toute la méthode. Mais si tu veux gagner des mois et éviter les erreurs de débutant, je propose deux formules d'accompagnement :",
+      text: "Ce guide te donne toute la méthode. Si tu veux aller plus vite et avoir mes contacts fournisseurs, réserve l'appel Q&R :",
     },
     page
   );
@@ -299,17 +299,8 @@ async function generate() {
     doc,
     {
       type: "tip",
-      title: "Appel questions / réponses — 150 CHF",
-      text: "Un appel dédié où tu poses toutes tes questions et où je te débloque sur ta situation précise.",
-    },
-    page
-  );
-  writeBlock(
-    doc,
-    {
-      type: "tip",
-      title: "Accompagnement complet",
-      text: "Le pack complet, avec en plus mes contacts fournisseurs directs — machines et consommables aux meilleurs prix, ceux que j'utilise moi-même.",
+      title: "Appel Q&R + fournisseurs — 100 CHF",
+      text: "1 heure en visio : on règle ta situation, et tu repars avec mes contacts fournisseurs (machines + consommables) — ceux que j'utilise.",
     },
     page
   );

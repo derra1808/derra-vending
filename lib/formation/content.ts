@@ -12,7 +12,7 @@ export const FORMATION = {
   packPrice: 250,
   packOriginalPrice: 300,
   currency: "CHF",
-  coachingCallPrice: 300,
+  coachingCallPrice: 100,
   coachingFullPrice: 300,
 } as const;
 
@@ -96,7 +96,7 @@ export const FORMATION_PRODUCTS = [
       "Plan d’action personnalisé",
       "Café et/ou snack",
     ],
-    cta: "Réserver l’appel — 300 CHF",
+    cta: "Réserver l’appel — 100 CHF",
     product: "coaching_call" as const,
     available: true,
     highlight: true,
