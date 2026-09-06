@@ -241,4 +241,11 @@ export const MEMBER_DOWNLOADS = [
     file: "plus-snack.pdf",
     type: "pdf" as const,
   },
+  {
+    id: "top-spots",
+    label: "Top 20 — Meilleurs emplacements",
+    description: "Café + snack, types de spots déjà chez nous — pas encore dans l’ebook",
+    file: "top-20-emplacements.pdf",
+    type: "pdf" as const,
+  },
 ] as const;

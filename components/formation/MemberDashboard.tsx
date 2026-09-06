@@ -15,6 +15,7 @@ import { MEMBER_DOWNLOADS, MEMBER_VIDEOS, PART_AVATAR_VIDEO } from "@/lib/format
 import { FormationAudioPlayer } from "@/components/formation/FormationAudioPlayer";
 import { FormationQa50 } from "@/components/formation/FormationQa50";
 import { FormationSnackPlus } from "@/components/formation/FormationSnackPlus";
+import { FormationTopSpots } from "@/components/formation/FormationTopSpots";
 
 type Tab = "formation" | "bonus" | "videos";
 
@@ -220,6 +221,9 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
                 <Download className="h-4 w-4 shrink-0" style={{ color: "var(--d-gold)" }} />
               </a>
             ))}
+            <div className="pt-8">
+              <FormationTopSpots />
+            </div>
             <div className="pt-8">
               <FormationSnackPlus />
             </div>

@@ -19,6 +19,7 @@ import {
   SNACK_PLUS_SUBTITLE,
   SNACK_PLUS_TITLE,
 } from "../lib/formation/snack-plus.ts";
+import { TOP_SPOTS, TOP_SPOTS_RULES, TOP_SPOTS_SUBTITLE, TOP_SPOTS_TITLE } from "../lib/formation/top-spots.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const outDir = resolve(__dirname, "../private/formation");
@@ -616,6 +617,96 @@ function writeSnackPlus(): Promise<void> {
   });
 }
 
+function writeTopSpots(): Promise<void> {
+  return new Promise((res, rej) => {
+    const doc = new PDFDocument({
+      size: "A4",
+      margins: { top: 0, bottom: 0, left: MARGIN, right: MARGIN },
+      info: { Title: TOP_SPOTS_TITLE, Author: "Derra Vending" },
+    });
+    const stream = createWriteStream(resolve(outDir, "top-20-emplacements.pdf"));
+    doc.pipe(stream);
+    const page = { n: 1 };
+    const label = TOP_SPOTS_TITLE;
+    const limit = FOOTER_Y - 16;
+
+    function newPage() {
+      drawFooter(doc, label, page.n);
+      doc.addPage();
+      fillCream(doc);
+      page.n += 1;
+      doc.rect(0, 0, PAGE_W, 28).fill(NIGHT);
+      doc
+        .fillColor(GOLD)
+        .font("Helvetica-Bold")
+        .fontSize(8)
+        .text("DERRA VENDING  ·  BONUS", MARGIN, 10, { width: CONTENT_W });
+      doc.rect(0, 28, PAGE_W, 2).fill(GOLD);
+      doc.y = 48;
+    }
+
+    drawHeader(doc, "BONUS", TOP_SPOTS_TITLE, TOP_SPOTS_SUBTITLE);
+
+    if (doc.y + 70 > limit) newPage();
+    const y0 = doc.y;
+    doc.rect(MARGIN, y0, 4, 16).fill(GOLD);
+    doc
+      .fillColor(NIGHT)
+      .font("Helvetica-Bold")
+      .fontSize(11)
+      .text("Règles", MARGIN + 14, y0 + 1, { width: CONTENT_W - 14 });
+    doc.y = y0 + 22;
+    for (const line of TOP_SPOTS_RULES) {
+      doc.font("Helvetica").fontSize(9.5);
+      const h = doc.heightOfString(`— ${line}`, { width: CONTENT_W, lineGap: 1.5 });
+      if (doc.y + h + 6 > limit) newPage();
+      doc.fillColor(TEXT).text(`— ${line}`, MARGIN, doc.y, { width: CONTENT_W, lineGap: 1.5 });
+      doc.y += 4;
+    }
+    doc.y += 10;
+
+    for (const s of TOP_SPOTS) {
+      const block = `#${String(s.rank).padStart(2, "0")}  ${s.name}\nCafé ${s.cafe}  ·  Snack ${s.snack}\n${s.why}\n${s.example}\nQui : ${s.who}\nPiège : ${s.trap}`;
+      doc.font("Helvetica").fontSize(9);
+      const h = doc.heightOfString(block, { width: CONTENT_W, lineGap: 1.4 }) + 14;
+      if (doc.y + h > limit) newPage();
+
+      doc
+        .fillColor(NIGHT)
+        .font("Helvetica-Bold")
+        .fontSize(11)
+        .text(`#${String(s.rank).padStart(2, "0")}  ${s.name}`, MARGIN, doc.y, { width: CONTENT_W });
+      doc
+        .fillColor(GOLD)
+        .font("Helvetica-Bold")
+        .fontSize(8)
+        .text(`Café ${s.cafe}   ·   Snack ${s.snack}`, MARGIN, doc.y + 2, { width: CONTENT_W });
+      doc
+        .fillColor(TEXT)
+        .font("Helvetica")
+        .fontSize(9)
+        .text(s.why, MARGIN, doc.y + 2, { width: CONTENT_W, lineGap: 1.3 });
+      doc
+        .fillColor(TEXT)
+        .font("Helvetica-Oblique")
+        .fontSize(8)
+        .text(s.example, MARGIN, doc.y + 1, { width: CONTENT_W, lineGap: 1.2 });
+      doc
+        .fillColor(TEXT)
+        .font("Helvetica")
+        .fontSize(8.5)
+        .text(`Qui : ${s.who}`, MARGIN, doc.y + 2, { width: CONTENT_W });
+      doc.text(`Piège : ${s.trap}`, MARGIN, doc.y + 1, { width: CONTENT_W });
+      doc.y += 10;
+    }
+
+    drawFooter(doc, label, page.n);
+    doc.end();
+    stream.on("finish", () => res());
+    stream.on("error", rej);
+  });
+}
+
 function writeVideoReadme() {
   const readme = `# Vidéos formation — Derra Vending
 
@@ -656,6 +747,7 @@ async function main() {
   await writeCalculator();
   await writeQa50();
   await writeSnackPlus();
+  await writeTopSpots();
   writeVideoReadme();
   await syncEbook();
   console.log(`✅ Bonus PDF générés dans ${outDir}`);
