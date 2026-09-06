@@ -29,10 +29,11 @@ yarn-error.log*
 .env
 .env*
 
-# formation — vidéos membres (garder README)
+# formation — médias membres (garder README)
 /private/formation/videos/*.mp4
 /private/formation/videos/*.mov
 /private/formation/videos/*.webm
+/private/formation/audio/*.mp3
 
 # typescript
 *.tsbuildinfo
