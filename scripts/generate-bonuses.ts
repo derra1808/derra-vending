@@ -446,30 +446,74 @@ function writeQa50(): Promise<void> {
   return new Promise((res, rej) => {
     const doc = new PDFDocument({
       size: "A4",
-      margins: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN },
+      margins: { top: 0, bottom: 0, left: MARGIN, right: MARGIN },
       info: { Title: QA50_TITLE, Author: "Derra Vending" },
     });
     const stream = createWriteStream(resolve(outDir, "50-questions-terrain.pdf"));
     doc.pipe(stream);
     const page = { n: 1 };
     const label = QA50_TITLE;
+    const limit = FOOTER_Y - 16;
+
+    function newPage() {
+      drawFooter(doc, label, page.n);
+      doc.addPage();
+      fillCream(doc);
+      page.n += 1;
+      doc.rect(0, 0, PAGE_W, 28).fill(NIGHT);
+      doc
+        .fillColor(GOLD)
+        .font("Helvetica-Bold")
+        .fontSize(8)
+        .text("DERRA VENDING  ·  BONUS", MARGIN, 10, { width: CONTENT_W });
+      doc.rect(0, 28, PAGE_W, 2).fill(GOLD);
+      doc.y = 48;
+    }
+
+    function blockHeight(q: string, a: string) {
+      doc.font("Helvetica-Bold").fontSize(10);
+      const qH = doc.heightOfString(q, { width: CONTENT_W, lineGap: 1.5 });
+      doc.font("Helvetica").fontSize(9.5);
+      const aH = doc.heightOfString(a, { width: CONTENT_W, lineGap: 1.5 });
+      return qH + 4 + aH + 10;
+    }
 
     drawHeader(doc, "BONUS", QA50_TITLE, QA50_SUBTITLE);
 
     let n = 0;
     for (const cat of QA50_CATEGORIES) {
-      sectionTitle(doc, cat.title, label, page);
+      const catH = 22;
+      const first = cat.items[0];
+      const firstH = first ? blockHeight(`${String(n + 1).padStart(2, "0")}. ${first.q}`, first.a) : 0;
+      if (doc.y + catH + Math.min(firstH, 36) > limit) newPage();
+
+      const y = doc.y;
+      doc.rect(MARGIN, y, 4, 16).fill(GOLD);
+      doc
+        .fillColor(NIGHT)
+        .font("Helvetica-Bold")
+        .fontSize(11)
+        .text(cat.title, MARGIN + 14, y + 1, { width: CONTENT_W - 14 });
+      doc.y = y + 22;
+
       for (const item of cat.items) {
         n += 1;
         const q = `${String(n).padStart(2, "0")}. ${item.q}`;
-        ensureSpace(doc, 42, label, page);
+        const h = blockHeight(q, item.a);
+        if (doc.y + h > limit) newPage();
+
         doc
           .fillColor(NIGHT)
           .font("Helvetica-Bold")
           .fontSize(10)
           .text(q, MARGIN, doc.y, { width: CONTENT_W, lineGap: 1.5 });
-        doc.moveDown(0.15);
-        bodyText(doc, item.a, label, page);
+        doc.y += 4;
+        doc
+          .fillColor(TEXT)
+          .font("Helvetica")
+          .fontSize(9.5)
+          .text(item.a, MARGIN, doc.y, { width: CONTENT_W, lineGap: 1.5 });
+        doc.y += 10;
       }
     }
 
