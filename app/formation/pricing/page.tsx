@@ -1,54 +1,59 @@
 import { CheckoutButton } from "@/components/formation/CheckoutButton";
+import { OfferCard } from "@/components/formation/OffersStrip";
 import { SectionHeading } from "@/components/formation/SectionHeading";
 import { SetupNotice } from "@/components/formation/SetupNotice";
 import {
-  COACHING_OPTIONS,
   FORMATION,
+  FORMATION_PRODUCTS,
   MODULES,
 } from "@/lib/formation/content";
-import {
-  FAQ_ITEMS,
-  FORMATION_OFFER,
-  VALUE_STACK,
-} from "@/lib/formation/offer";
+import { FAQ_ITEMS, FORMATION_OFFER, VALUE_STACK } from "@/lib/formation/offer";
 import { getSetupStatus } from "@/lib/formation/config";
 
 export default function PricingPage() {
   const setup = getSetupStatus();
   const stackTotal = VALUE_STACK.reduce((s, i) => s + i.value, 0);
+  const cafe = FORMATION_PRODUCTS.find((p) => p.id === "cafe")!;
+  const call = FORMATION_PRODUCTS.find((p) => p.id === "call")!;
 
   return (
     <div className="section-cream px-6 py-24 md:py-32">
       <div className="mx-auto max-w-5xl">
         <SectionHeading
           label="Offre"
-          title="Pack formation — 50 CHF"
-          description="Ebook + contrat + scripts + checklist + calculateur + espace vidéo. Accès immédiat."
+          title="Tarifs formation"
+          description="Pack méthode maintenant, ou appel 1h avec mes fournisseurs."
         />
 
         {!setup.ready && <SetupNotice setup={setup} />}
 
-        <div className="mx-auto mt-16 max-w-xl">
-          <div className="formation-card p-8 md:p-10">
-            <p className="formation-label">Pack complet</p>
-            <h2 className="formation-title mt-4 text-3xl">{FORMATION.title}</h2>
+        <div className="mt-16 grid gap-5 sm:grid-cols-2">
+          {FORMATION_PRODUCTS.map((p) => (
+            <OfferCard key={p.id} product={p} />
+          ))}
+        </div>
 
-            <div className="mt-8 flex items-end gap-3">
-              <span className="formation-title formation-accent text-5xl">
-                {FORMATION.ebookPrice}
-              </span>
+        <div className="mx-auto mt-16 max-w-xl" id="cafe">
+          <div className="formation-card p-8 md:p-10">
+            <p className="formation-label">Détail — formation café</p>
+            <h2 className="formation-title mt-4 text-3xl">{FORMATION.title}</h2>
+            <div className="mt-6 flex items-end gap-3">
+              <span className="formation-title formation-accent text-5xl">{cafe.price}</span>
               <span className="formation-body mb-2 text-lg">{FORMATION.currency}</span>
-              <span className="formation-body mb-2 ml-2 text-sm line-through">
-                {FORMATION.ebookOriginalPrice} {FORMATION.currency}
-              </span>
+              {cafe.originalPrice && (
+                <span className="formation-body mb-2 ml-2 text-sm line-through opacity-50">
+                  {cafe.originalPrice} {FORMATION.currency}
+                </span>
+              )}
             </div>
             <p className="formation-body mt-2 text-xs">
-              Valeur perçue du pack : {stackTotal} {FORMATION.currency}
+              Valeur perçue : {stackTotal} {FORMATION.currency}
             </p>
-
             <ul
               className="formation-body mt-8 space-y-3 pt-6 text-sm"
-              style={{ borderTop: "1px solid color-mix(in srgb, var(--d-night) 12%, transparent)" }}
+              style={{
+                borderTop: "1px solid color-mix(in srgb, var(--d-night) 12%, transparent)",
+              }}
             >
               {VALUE_STACK.map((item) => (
                 <li key={item.id} className="flex justify-between gap-4">
@@ -62,7 +67,6 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-
             <div className="mt-8">
               <p className="formation-label mb-3">Au programme</p>
               <ul className="formation-body space-y-2 text-sm">
@@ -75,15 +79,13 @@ export default function PricingPage() {
                 ))}
               </ul>
             </div>
-
             <div className="mt-10">
               <CheckoutButton
                 product="ebook"
-                label={`Accéder au pack — ${FORMATION.ebookPrice} CHF`}
+                label={`Accéder — ${cafe.price} CHF`}
                 className="formation-btn-primary flex w-full items-center justify-center disabled:opacity-60"
               />
             </div>
-
             <p className="formation-body mt-6 text-center text-xs leading-relaxed">
               {FORMATION_OFFER.guaranteeText}
             </p>
@@ -102,39 +104,39 @@ export default function PricingPage() {
           </div>
         </div>
 
-        <div className="mt-28">
+        <div className="mt-28" id="appel">
           <SectionHeading
-            label="Coaching"
-            title="Accompagnement personnalisé"
-            description="Pour aller plus loin : suivi direct et contacts fournisseurs."
+            label="Appel"
+            title="Appel Q&R + mes fournisseurs"
+            description="1 heure avec Ibrahim. Tu poses tes questions — et tu repars avec ses contacts fournisseurs."
           />
-
-          <div className="mt-16 grid gap-6 md:grid-cols-2">
-            {COACHING_OPTIONS.map((opt) => (
-              <div key={opt.id} className="formation-card p-10">
-                <p className="formation-label">{opt.name}</p>
-                <p className="formation-title formation-accent mt-4 text-4xl">
-                  {opt.price}{" "}
-                  <span className="formation-body text-xl">{FORMATION.currency}</span>
-                </p>
-                <p className="formation-body mt-4 text-sm">{opt.description}</p>
-                <ul className="formation-body mt-8 space-y-2 text-sm">
-                  {opt.features.map((f) => (
-                    <li key={f} className="flex gap-3">
-                      <span className="formation-accent">—</span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-10">
-                  <CheckoutButton
-                    product={opt.id === "call" ? "coaching_call" : "coaching_full"}
-                    label={`Réserver — ${opt.price} CHF`}
-                    className="formation-btn-ghost-dark flex w-full items-center justify-center disabled:opacity-60"
-                  />
-                </div>
+          <div className="mx-auto mt-16 max-w-xl">
+            <div
+              className="formation-card p-10"
+              style={{ borderColor: "color-mix(in srgb, var(--d-gold) 50%, transparent)" }}
+            >
+              <p className="formation-label">{call.name}</p>
+              <p className="formation-title formation-accent mt-4 text-4xl">
+                {call.price}{" "}
+                <span className="formation-body text-xl">{FORMATION.currency}</span>
+              </p>
+              <p className="formation-body mt-4 text-sm">{call.description}</p>
+              <ul className="formation-body mt-8 space-y-2 text-sm">
+                {call.features.map((f) => (
+                  <li key={f} className="flex gap-3">
+                    <span className="formation-accent">—</span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-10">
+                <CheckoutButton
+                  product="coaching_call"
+                  label={`Réserver — ${call.price} CHF`}
+                  className="formation-btn-primary flex w-full items-center justify-center disabled:opacity-60"
+                />
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
