@@ -23,10 +23,22 @@ function mediaAdmin() {
   });
 }
 
+export function getFormationMediaPublicUrl(
+  kind: "audio" | "video",
+  filename: string
+): string | null {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!base) return null;
+  return `${base.replace(/\/$/, "")}/storage/v1/object/public/${BUCKET}/${kind}/${encodeURIComponent(filename)}`;
+}
+
 export async function getFormationMediaSignedUrl(
   kind: "audio" | "video",
   filename: string
 ): Promise<string | null> {
+  const publicUrl = getFormationMediaPublicUrl(kind, filename);
+  if (publicUrl) return publicUrl;
+
   const sb = mediaAdmin();
   if (!sb) return null;
   const path = `${kind}/${filename}`;

@@ -40,6 +40,15 @@ export function FormationVideoPlayer({
       }
 
       const filename = MEMBER_VIDEOS.find((v) => v.id === id)?.filename;
+      const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      if (filename && base) {
+        if (!cancelled) {
+          setUrl(
+            `${base.replace(/\/$/, "")}/storage/v1/object/public/formation-media/video/${encodeURIComponent(filename)}`
+          );
+        }
+        return;
+      }
       const supabase = createClient();
       if (!filename || !supabase) {
         if (!cancelled) setError("La vidéo ne se charge pas. Réessaie dans un instant.");

@@ -26,7 +26,11 @@ export function FormationAudioPlayer({
   const [ready, setReady] = useState(false);
 
   const track = FORMATION_AUDIO_TRACKS[index];
-  const src = urls[`audio:${track.id}`] || urls[track.id] || `/api/formation/audio/${track.id}`;
+  const publicBase = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
+  const publicSrc = publicBase
+    ? `${publicBase}/storage/v1/object/public/formation-media/audio/${encodeURIComponent(track.filename)}`
+    : "";
+  const src = urls[`audio:${track.id}`] || urls[track.id] || publicSrc || `/api/formation/audio/${track.id}`;
 
   useEffect(() => {
     const audio = audioRef.current;
