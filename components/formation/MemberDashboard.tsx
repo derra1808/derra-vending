@@ -12,7 +12,7 @@ import {
   Play,
 } from "lucide-react";
 import { EBOOK_PARTS, FORMATION } from "@/lib/formation/content";
-import { MEMBER_DOWNLOADS, MEMBER_VIDEOS, PART_AVATAR_VIDEO } from "@/lib/formation/offer";
+import { MEMBER_DOWNLOADS, MEMBER_VIDEOS, PART_AVATAR_VIDEO, formationVideoSrc } from "@/lib/formation/offer";
 import { FormationAudioPlayer } from "@/components/formation/FormationAudioPlayer";
 import { FormationQa50 } from "@/components/formation/FormationQa50";
 import { FormationSnackPlus } from "@/components/formation/FormationSnackPlus";
@@ -41,7 +41,7 @@ function PartMedia({
           playsInline
           preload="metadata"
           poster={image}
-          src={`/api/formation/video/${avatar.id}`}
+          src={formationVideoSrc(avatar.filename)}
           onError={() => setShowImage(true)}
         >
           Ton navigateur ne lit pas la vidéo.
@@ -72,6 +72,7 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
   const [tab, setTab] = useState<Tab>("formation");
   const [activeVideo, setActiveVideo] = useState<string>(readyVideos[0]?.id ?? "cynara-recolte");
   const [videoError, setVideoError] = useState<string | null>(null);
+  const currentVideo = readyVideos.find((v) => v.id === activeVideo) ?? readyVideos[0];
 
   const tabs: { id: Tab; label: string; icon: typeof BookOpen }[] = [
     { id: "formation", label: "Formation", icon: BookOpen },
@@ -242,22 +243,37 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
               className="overflow-hidden"
               style={{ border: "1px solid color-mix(in srgb, var(--d-gold) 40%, transparent)" }}
             >
-              <video
-                key={activeVideo}
-                className="aspect-video w-full bg-black"
-                controls
-                playsInline
-                autoPlay
-                src={`/api/formation/video/${activeVideo}`}
-                onError={() =>
-                  setVideoError("La vidéo ne se charge pas. Réessaie dans un instant.")
-                }
-                onLoadedData={() => setVideoError(null)}
-              />
-              {videoError && (
-                <p className="formation-body p-4 text-center text-sm" style={{ color: "var(--d-gold)" }}>
-                  {videoError}
-                </p>
+              {currentVideo && (
+                <>
+                  <video
+                    key={currentVideo.id}
+                    className="aspect-video w-full bg-black"
+                    controls
+                    playsInline
+                    preload="auto"
+                    src={formationVideoSrc(currentVideo.filename)}
+                    onError={() =>
+                      setVideoError("La vidéo ne se charge pas. Réessaie dans un instant.")
+                    }
+                    onLoadedData={() => setVideoError(null)}
+                  />
+                  {videoError && (
+                    <p className="formation-body p-4 text-center text-sm" style={{ color: "var(--d-gold)" }}>
+                      {videoError}
+                    </p>
+                  )}
+                  <p className="formation-body px-4 py-3 text-sm">
+                    <a
+                      href={formationVideoSrc(currentVideo.filename)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline"
+                      style={{ color: "var(--d-gold)" }}
+                    >
+                      Si le lecteur reste noir, ouvre la vidéo ici
+                    </a>
+                  </p>
+                </>
               )}
             </div>
 

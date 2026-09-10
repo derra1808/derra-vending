@@ -121,6 +121,17 @@ export const FAQ_ITEMS = [
 export const BUSINESS_GOLD_RULE =
   "Dans le business, ton client doit avoir l’impression de gagner. Toujours. Un commerçant content pousse le café, reste des années, et te recommande. Vaut mieux gagner un peu, longtemps, que beaucoup, une fois.";
 
+export const FORMATION_MEDIA_BASE =
+  "https://nxtbnoxrkgpuggowpydn.supabase.co/storage/v1/object/public/formation-media";
+
+export function formationVideoSrc(filename: string) {
+  return `${FORMATION_MEDIA_BASE}/video/${filename}`;
+}
+
+export function formationAudioSrc(filename: string) {
+  return `${FORMATION_MEDIA_BASE}/audio/${filename}`;
+}
+
 export const MEMBER_VIDEOS = [
   {
     id: "cynara-recolte",
