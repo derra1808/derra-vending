@@ -33,6 +33,7 @@ yarn-error.log*
 /private/formation/videos/*.mp4
 /private/formation/videos/*.mov
 /private/formation/videos/*.webm
+/private/formation/videos/.web/
 /private/formation/audio/*.mp3
 
 # typescript

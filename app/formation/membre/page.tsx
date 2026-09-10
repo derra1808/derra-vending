@@ -4,6 +4,7 @@ import { Lock } from "lucide-react";
 import { getProfile } from "@/lib/supabase/server";
 import { syncPaidAccessForUser } from "@/lib/stripe-confirm";
 import { getSetupStatus, isFormationFreeAccess } from "@/lib/formation/config";
+import { hasLifetimeFormationAccess } from "@/lib/formation/access";
 import { FORMATION } from "@/lib/formation/content";
 import { MemberDashboard } from "@/components/formation/MemberDashboard";
 
@@ -14,10 +15,11 @@ export default async function MembrePage() {
     redirect("/formation/login?redirect=/formation/membre");
   }
 
-  let access = (profile?.has_paid ?? false) || isFormationFreeAccess();
+  let access =
+    hasLifetimeFormationAccess(user, profile) || isFormationFreeAccess();
 
   if (!access && getSetupStatus().stripe) {
-    const synced = await syncPaidAccessForUser(user.id);
+    const synced = await syncPaidAccessForUser(user.id, user.email);
     if (synced.ok) {
       access = true;
     }

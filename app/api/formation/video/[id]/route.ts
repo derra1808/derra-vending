@@ -6,6 +6,12 @@ import { getProfile } from "@/lib/supabase/server";
 import { isFormationFreeAccess, getSetupStatus } from "@/lib/formation/config";
 import { MEMBER_VIDEOS } from "@/lib/formation/offer";
 import { syncPaidAccessForUser } from "@/lib/stripe-confirm";
+import { hasLifetimeFormationAccess } from "@/lib/formation/access";
+import {
+  getFormationMediaSignedUrl,
+  signedSrcResponse,
+  wantsSignedSrc,
+} from "@/lib/formation/media";
 
 type BlobMeta = {
   pathname?: string;
@@ -49,7 +55,7 @@ async function signedBlobUrl(pathname: string): Promise<string | null> {
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
@@ -63,17 +69,26 @@ export async function GET(
     return NextResponse.json({ error: "Non connecté" }, { status: 401 });
   }
 
-  let access = (profile?.has_paid ?? false) || isFormationFreeAccess();
+  let access = hasLifetimeFormationAccess(user, profile) || isFormationFreeAccess();
   if (!access && getSetupStatus().stripe) {
-    const synced = await syncPaidAccessForUser(user.id);
+    const synced = await syncPaidAccessForUser(user.id, user.email);
     if (synced.ok) access = true;
   }
   if (!access) {
     return NextResponse.json({ error: "Accès réservé" }, { status: 403 });
   }
 
+  const supabaseUrl = await getFormationMediaSignedUrl("video", video.filename);
+  if (supabaseUrl) {
+    if (wantsSignedSrc(request)) return signedSrcResponse(supabaseUrl);
+    return NextResponse.redirect(supabaseUrl, 302);
+  }
+
   const localPath = resolve(process.cwd(), "private/formation/videos", video.filename);
   if (existsSync(localPath)) {
+    if (wantsSignedSrc(request)) {
+      return signedSrcResponse(`/api/formation/video/${id}`);
+    }
     const stat = statSync(localPath);
     const stream = createReadStream(localPath);
     const webStream = Readable.toWeb(stream) as ReadableStream;
@@ -91,6 +106,7 @@ export async function GET(
   if (meta?.pathname) {
     const signed = await signedBlobUrl(meta.pathname);
     if (signed) {
+      if (wantsSignedSrc(request)) return signedSrcResponse(signed);
       return NextResponse.redirect(signed, 302);
     }
   }
