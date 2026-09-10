@@ -37,4 +37,16 @@ export async function getFormationMediaSignedUrl(
   return data.signedUrl;
 }
 
+export async function signFormationMediaMap(
+  items: { id: string; kind: "audio" | "video"; filename: string }[]
+): Promise<Record<string, string>> {
+  const entries = await Promise.all(
+    items.map(async (item) => {
+      const url = await getFormationMediaSignedUrl(item.kind, item.filename);
+      return url ? ([item.id, url] as const) : null;
+    })
+  );
+  return Object.fromEntries(entries.filter(Boolean) as [string, string][]);
+}
+
 export { BUCKET as FORMATION_MEDIA_BUCKET };

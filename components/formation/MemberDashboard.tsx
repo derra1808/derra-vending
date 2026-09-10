@@ -16,6 +16,7 @@ import { FormationAudioPlayer } from "@/components/formation/FormationAudioPlaye
 import { FormationQa50 } from "@/components/formation/FormationQa50";
 import { FormationSnackPlus } from "@/components/formation/FormationSnackPlus";
 import { FormationTopSpots } from "@/components/formation/FormationTopSpots";
+import { FormationVideoPlayer } from "@/components/formation/FormationVideoPlayer";
 
 type Tab = "formation" | "bonus" | "videos";
 
@@ -23,10 +24,12 @@ function PartMedia({
   partId,
   image,
   title,
+  mediaUrls,
 }: {
   partId: number;
   image?: string;
   title: string;
+  mediaUrls: Record<string, string>;
 }) {
   const avatar = PART_AVATAR_VIDEO[partId];
   const [showImage, setShowImage] = useState(!avatar);
@@ -34,17 +37,12 @@ function PartMedia({
   if (avatar && !showImage) {
     return (
       <div className="relative bg-black">
-        <video
-          className="aspect-video w-full max-h-[85vh] object-contain"
-          controls
-          playsInline
-          preload="metadata"
+        <FormationVideoPlayer
+          id={avatar.id}
+          src={mediaUrls[`video:${avatar.id}`]}
           poster={image}
-          src={avatar ? `/api/formation/video/${avatar.id}` : undefined}
-          onError={() => setShowImage(true)}
-        >
-          Ton navigateur ne lit pas la vidéo.
-        </video>
+          className="aspect-video w-full max-h-[85vh] object-contain bg-black"
+        />
         <p
           className="formation-label absolute left-3 top-3 px-2 py-1 text-[9px]"
           style={{ background: "color-mix(in srgb, var(--d-night) 75%, transparent)", color: "var(--d-gold)" }}
@@ -65,7 +63,13 @@ function PartMedia({
   );
 }
 
-export function MemberDashboard({ displayName }: { displayName: string }) {
+export function MemberDashboard({
+  displayName,
+  mediaUrls = {},
+}: {
+  displayName: string;
+  mediaUrls?: Record<string, string>;
+}) {
   const readyVideos = MEMBER_VIDEOS.filter((v) => v.ready);
   const pendingVideos = MEMBER_VIDEOS.filter((v) => !v.ready);
   const [tab, setTab] = useState<Tab>("formation");
@@ -125,7 +129,7 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
 
         {tab === "formation" && (
           <div className="mt-8 space-y-5 md:mt-10 md:space-y-6">
-            <FormationAudioPlayer />
+            <FormationAudioPlayer urls={mediaUrls} />
             {EBOOK_PARTS.map((part) => (
               <article
                 key={part.id}
@@ -136,6 +140,7 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
                   partId={part.id}
                   image={"image" in part ? part.image : undefined}
                   title={part.title}
+                  mediaUrls={mediaUrls}
                 />
                 <div className="p-5 sm:p-8 md:p-10 lg:px-14 lg:py-12">
                   <span className="formation-label">Partie {part.id}</span>
@@ -264,16 +269,10 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
                       Disponible
                     </span>
                   </div>
-                  <video
+                  <FormationVideoPlayer
+                    id={video.id}
+                    src={mediaUrls[`video:${video.id}`]}
                     className="aspect-video w-full bg-black"
-                    controls
-                    playsInline
-                    preload="metadata"
-                    src={`/api/formation/video/${video.id}`}
-                    onError={() =>
-                      setVideoError("La vidéo ne se charge pas. Réessaie dans un instant.")
-                    }
-                    onLoadedData={() => setVideoError(null)}
                   />
                   {videoError && (
                     <p className="formation-body p-4 text-center text-sm" style={{ color: "var(--d-gold)" }}>

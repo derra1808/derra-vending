@@ -7,6 +7,11 @@ import { getSetupStatus, isFormationFreeAccess } from "@/lib/formation/config";
 import { hasLifetimeFormationAccess } from "@/lib/formation/access";
 import { FORMATION } from "@/lib/formation/content";
 import { MemberDashboard } from "@/components/formation/MemberDashboard";
+import { MEMBER_VIDEOS } from "@/lib/formation/offer";
+import { FORMATION_AUDIO_TRACKS } from "@/lib/formation/audio-tracks";
+import { signFormationMediaMap } from "@/lib/formation/media";
+
+export const dynamic = "force-dynamic";
 
 export default async function MembrePage() {
   const { user, profile } = await getProfile();
@@ -49,5 +54,18 @@ export default async function MembrePage() {
     user.email ||
     "Membre";
 
-  return <MemberDashboard displayName={displayName} />;
+  const mediaUrls = await signFormationMediaMap([
+    ...MEMBER_VIDEOS.filter((v) => v.ready).map((v) => ({
+      id: `video:${v.id}`,
+      kind: "video" as const,
+      filename: v.filename,
+    })),
+    ...FORMATION_AUDIO_TRACKS.map((t) => ({
+      id: `audio:${t.id}`,
+      kind: "audio" as const,
+      filename: t.filename,
+    })),
+  ]);
+
+  return <MemberDashboard displayName={displayName} mediaUrls={mediaUrls} />;
 }

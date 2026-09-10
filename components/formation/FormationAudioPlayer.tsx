@@ -11,7 +11,11 @@ function formatTime(sec: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export function FormationAudioPlayer() {
+export function FormationAudioPlayer({
+  urls = {},
+}: {
+  urls?: Record<string, string>;
+}) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playAfterLoadRef = useRef(false);
   const [index, setIndex] = useState(0);
@@ -22,7 +26,7 @@ export function FormationAudioPlayer() {
   const [ready, setReady] = useState(false);
 
   const track = FORMATION_AUDIO_TRACKS[index];
-  const src = `/api/formation/audio/${track.id}`;
+  const src = urls[`audio:${track.id}`] || urls[track.id] || `/api/formation/audio/${track.id}`;
 
   useEffect(() => {
     const audio = audioRef.current;
