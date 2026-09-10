@@ -9,6 +9,7 @@ import {
   Video,
   FolderDown,
   Clock,
+  Play,
 } from "lucide-react";
 import { EBOOK_PARTS, FORMATION } from "@/lib/formation/content";
 import { MEMBER_DOWNLOADS, MEMBER_VIDEOS, PART_AVATAR_VIDEO } from "@/lib/formation/offer";
@@ -16,7 +17,6 @@ import { FormationAudioPlayer } from "@/components/formation/FormationAudioPlaye
 import { FormationQa50 } from "@/components/formation/FormationQa50";
 import { FormationSnackPlus } from "@/components/formation/FormationSnackPlus";
 import { FormationTopSpots } from "@/components/formation/FormationTopSpots";
-import { FormationVideoPlayer } from "@/components/formation/FormationVideoPlayer";
 
 type Tab = "formation" | "bonus" | "videos";
 
@@ -24,12 +24,10 @@ function PartMedia({
   partId,
   image,
   title,
-  mediaUrls,
 }: {
   partId: number;
   image?: string;
   title: string;
-  mediaUrls: Record<string, string>;
 }) {
   const avatar = PART_AVATAR_VIDEO[partId];
   const [showImage, setShowImage] = useState(!avatar);
@@ -37,12 +35,17 @@ function PartMedia({
   if (avatar && !showImage) {
     return (
       <div className="relative bg-black">
-        <FormationVideoPlayer
-          id={avatar.id}
-          src={mediaUrls[`video:${avatar.id}`]}
+        <video
+          className="aspect-video w-full max-h-[85vh] object-contain"
+          controls
+          playsInline
+          preload="metadata"
           poster={image}
-          className="aspect-video w-full max-h-[85vh] object-contain bg-black"
-        />
+          src={`/api/formation/video/${avatar.id}`}
+          onError={() => setShowImage(true)}
+        >
+          Ton navigateur ne lit pas la vidéo.
+        </video>
         <p
           className="formation-label absolute left-3 top-3 px-2 py-1 text-[9px]"
           style={{ background: "color-mix(in srgb, var(--d-night) 75%, transparent)", color: "var(--d-gold)" }}
@@ -63,16 +66,11 @@ function PartMedia({
   );
 }
 
-export function MemberDashboard({
-  displayName,
-  mediaUrls = {},
-}: {
-  displayName: string;
-  mediaUrls?: Record<string, string>;
-}) {
+export function MemberDashboard({ displayName }: { displayName: string }) {
   const readyVideos = MEMBER_VIDEOS.filter((v) => v.ready);
   const pendingVideos = MEMBER_VIDEOS.filter((v) => !v.ready);
   const [tab, setTab] = useState<Tab>("formation");
+  const [activeVideo, setActiveVideo] = useState<string>(readyVideos[0]?.id ?? "cynara-recolte");
   const [videoError, setVideoError] = useState<string | null>(null);
 
   const tabs: { id: Tab; label: string; icon: typeof BookOpen }[] = [
@@ -129,7 +127,7 @@ export function MemberDashboard({
 
         {tab === "formation" && (
           <div className="mt-8 space-y-5 md:mt-10 md:space-y-6">
-            <FormationAudioPlayer urls={mediaUrls} />
+            <FormationAudioPlayer />
             {EBOOK_PARTS.map((part) => (
               <article
                 key={part.id}
@@ -140,7 +138,6 @@ export function MemberDashboard({
                   partId={part.id}
                   image={"image" in part ? part.image : undefined}
                   title={part.title}
-                  mediaUrls={mediaUrls}
                 />
                 <div className="p-5 sm:p-8 md:p-10 lg:px-14 lg:py-12">
                   <span className="formation-label">Partie {part.id}</span>
@@ -240,76 +237,73 @@ export function MemberDashboard({
         )}
 
         {tab === "videos" && (
-          <div className="mt-10 space-y-8">
-            {readyVideos.map((video) => (
-              <div key={video.id}>
-                <div className="mb-4">
-                  <p className="formation-label">Disponible maintenant</p>
-                  <h2 className="formation-title mt-3 text-2xl md:text-3xl">{video.title}</h2>
-                  <p className="formation-body mt-2 max-w-2xl text-sm md:text-base">
-                    {video.description}
-                  </p>
-                </div>
-                <div
-                  className="overflow-hidden"
-                  style={{ border: "1px solid color-mix(in srgb, var(--d-gold) 55%, transparent)" }}
-                >
-                  <div
-                    className="flex items-center justify-between gap-3 px-4 py-3"
-                    style={{
-                      background: "color-mix(in srgb, var(--d-gold) 14%, var(--d-night))",
-                      borderBottom: "1px solid color-mix(in srgb, var(--d-gold) 35%, transparent)",
-                    }}
-                  >
-                    <span className="formation-label">Vidéo exclusive</span>
-                    <span
-                      className="formation-label px-2 py-1 text-[10px]"
-                      style={{ color: "var(--d-night)", background: "var(--d-gold)" }}
-                    >
-                      Disponible
-                    </span>
-                  </div>
-                  <FormationVideoPlayer
-                    id={video.id}
-                    src={mediaUrls[`video:${video.id}`]}
-                    className="aspect-video w-full bg-black"
-                  />
-                  {videoError && (
-                    <p className="formation-body p-4 text-center text-sm" style={{ color: "var(--d-gold)" }}>
-                      {videoError}
-                    </p>
-                  )}
-                  <p className="formation-body px-4 py-3 text-xs">
-                    {video.duration} · disponible
-                  </p>
-                </div>
-              </div>
-            ))}
-
-            {pendingVideos.length > 0 && (
-              <div>
-                <h3 className="formation-title text-xl">Les prochaines vidéos</h3>
-                <p className="formation-body mt-2 text-sm">
-                  En attente — elles arriveront ici.
+          <div className="mt-10 space-y-6">
+            <div
+              className="overflow-hidden"
+              style={{ border: "1px solid color-mix(in srgb, var(--d-gold) 40%, transparent)" }}
+            >
+              <video
+                key={activeVideo}
+                className="aspect-video w-full bg-black"
+                controls
+                playsInline
+                autoPlay
+                src={`/api/formation/video/${activeVideo}`}
+                onError={() =>
+                  setVideoError("La vidéo ne se charge pas. Réessaie dans un instant.")
+                }
+                onLoadedData={() => setVideoError(null)}
+              />
+              {videoError && (
+                <p className="formation-body p-4 text-center text-sm" style={{ color: "var(--d-gold)" }}>
+                  {videoError}
                 </p>
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  {pendingVideos.map((v) => (
-                    <div key={v.id} className="formation-card p-5 opacity-70" aria-disabled="true">
-                      <div className="flex items-start gap-3">
-                        <Clock className="mt-1 h-4 w-4 shrink-0" style={{ color: "var(--d-gold)" }} />
-                        <div>
-                          <p className="formation-label text-[10px]">En attente</p>
-                          <p className="formation-title mt-2 text-lg" style={{ color: "var(--d-night)" }}>
-                            {v.title}
-                          </p>
-                          <p className="formation-body mt-2 text-xs">{v.description}</p>
-                        </div>
-                      </div>
+              )}
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {readyVideos.map((v) => (
+                <button
+                  key={v.id}
+                  type="button"
+                  onClick={() => {
+                    setVideoError(null);
+                    setActiveVideo(v.id);
+                  }}
+                  className="formation-card p-5 text-left transition hover:opacity-95"
+                  style={
+                    activeVideo === v.id
+                      ? { borderColor: "var(--d-gold)" }
+                      : undefined
+                  }
+                >
+                  <div className="flex items-start gap-3">
+                    <Play className="mt-1 h-4 w-4 shrink-0" style={{ color: "var(--d-gold)" }} />
+                    <div>
+                      <p className="formation-label text-[10px]">{v.duration}</p>
+                      <p className="formation-title mt-2 text-lg" style={{ color: "var(--d-night)" }}>
+                        {v.title}
+                      </p>
+                      <p className="formation-body mt-2 text-xs">{v.description}</p>
                     </div>
-                  ))}
+                  </div>
+                </button>
+              ))}
+              {pendingVideos.map((v) => (
+                <div key={v.id} className="formation-card p-5 opacity-70" aria-disabled="true">
+                  <div className="flex items-start gap-3">
+                    <Clock className="mt-1 h-4 w-4 shrink-0" style={{ color: "var(--d-gold)" }} />
+                    <div>
+                      <p className="formation-label text-[10px]">En attente</p>
+                      <p className="formation-title mt-2 text-lg" style={{ color: "var(--d-night)" }}>
+                        {v.title}
+                      </p>
+                      <p className="formation-body mt-2 text-xs">{v.description}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
         )}
 

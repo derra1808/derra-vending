@@ -1,60 +1,13 @@
 import { NextResponse } from "next/server";
-import { createReadStream, existsSync, statSync, readFileSync } from "fs";
 import { resolve } from "path";
-import { Readable } from "stream";
 import { getProfile } from "@/lib/supabase/server";
 import { isFormationFreeAccess, getSetupStatus } from "@/lib/formation/config";
 import { MEMBER_VIDEOS } from "@/lib/formation/offer";
 import { syncPaidAccessForUser } from "@/lib/stripe-confirm";
 import { hasLifetimeFormationAccess } from "@/lib/formation/access";
-import {
-  getFormationMediaSignedUrl,
-  signedSrcResponse,
-  wantsSignedSrc,
-} from "@/lib/formation/media";
+import { streamFormationFile } from "@/lib/formation/stream-media";
 
 export const dynamic = "force-dynamic";
-
-type BlobMeta = {
-  pathname?: string;
-  url?: string;
-};
-
-function getBlobMeta(videoId: string): BlobMeta | null {
-  try {
-    const path = resolve(process.cwd(), "lib/formation/video-blob-urls.json");
-    if (!existsSync(path)) return null;
-    const data = JSON.parse(readFileSync(path, "utf8")) as Record<string, BlobMeta>;
-    return data[videoId] ?? null;
-  } catch {
-    return null;
-  }
-}
-
-async function signedBlobUrl(pathname: string): Promise<string | null> {
-  const token = process.env.BLOB_READ_WRITE_TOKEN;
-  if (!token) return null;
-  try {
-    const { issueSignedToken, presignUrl } = await import("@vercel/blob");
-    const validUntil = Date.now() + 1000 * 60 * 60 * 6; // 6h
-    const signed = await issueSignedToken({
-      pathname,
-      operations: ["get"],
-      validUntil,
-      token,
-    });
-    const { presignedUrl } = await (presignUrl as Function)(signed, {
-      access: "private",
-      operation: "get",
-      pathname,
-      validUntil,
-      token,
-    });
-    return typeof presignedUrl === "string" ? presignedUrl : null;
-  } catch {
-    return null;
-  }
-}
 
 export async function GET(
   request: Request,
@@ -80,44 +33,11 @@ export async function GET(
     return NextResponse.json({ error: "Accès réservé" }, { status: 403 });
   }
 
-  const supabaseUrl = await getFormationMediaSignedUrl("video", video.filename);
-  if (supabaseUrl) {
-    if (wantsSignedSrc(request)) return signedSrcResponse(supabaseUrl);
-    return NextResponse.redirect(supabaseUrl, 302);
-  }
-
-  const localPath = resolve(process.cwd(), "private/formation/videos", video.filename);
-  if (existsSync(localPath)) {
-    if (wantsSignedSrc(request)) {
-      return signedSrcResponse(`/api/formation/video/${id}`);
-    }
-    const stat = statSync(localPath);
-    const stream = createReadStream(localPath);
-    const webStream = Readable.toWeb(stream) as ReadableStream;
-    return new NextResponse(webStream, {
-      headers: {
-        "Content-Type": "video/mp4",
-        "Content-Length": String(stat.size),
-        "Accept-Ranges": "bytes",
-        "Cache-Control": "private, no-store",
-      },
-    });
-  }
-
-  const meta = getBlobMeta(id);
-  if (meta?.pathname) {
-    const signed = await signedBlobUrl(meta.pathname);
-    if (signed) {
-      if (wantsSignedSrc(request)) return signedSrcResponse(signed);
-      return NextResponse.redirect(signed, 302);
-    }
-  }
-
-  return NextResponse.json(
-    {
-      error: "Vidéo pas encore uploadée",
-      hint: `Place ${video.filename} dans private/formation/videos/`,
-    },
-    { status: 404 }
-  );
+  return streamFormationFile({
+    request,
+    localPath: resolve(process.cwd(), "private/formation/videos", video.filename),
+    kind: "video",
+    filename: video.filename,
+    contentType: "video/mp4",
+  });
 }
