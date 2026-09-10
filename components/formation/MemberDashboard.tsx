@@ -128,6 +128,43 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
 
         {tab === "formation" && (
           <div className="mt-8 space-y-5 md:mt-10 md:space-y-6">
+            {currentVideo && (
+              <div
+                className="overflow-hidden"
+                style={{ border: "1px solid color-mix(in srgb, var(--d-gold) 45%, transparent)" }}
+              >
+                <div
+                  className="px-4 py-3"
+                  style={{
+                    background: "color-mix(in srgb, var(--d-gold) 14%, var(--d-night))",
+                    borderBottom: "1px solid color-mix(in srgb, var(--d-gold) 35%, transparent)",
+                  }}
+                >
+                  <p className="formation-label">Vidéo exclusive</p>
+                  <p className="formation-title mt-2 text-xl" style={{ color: "var(--d-cream)" }}>
+                    {currentVideo.title}
+                  </p>
+                </div>
+                <video
+                  className="aspect-video w-full bg-black"
+                  controls
+                  playsInline
+                  preload="auto"
+                  src={formationVideoSrc(currentVideo.filename)}
+                />
+                <p className="formation-body px-4 py-3 text-sm">
+                  <a
+                    href={formationVideoSrc(currentVideo.filename)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline"
+                    style={{ color: "var(--d-gold)" }}
+                  >
+                    Ouvrir la vidéo
+                  </a>
+                </p>
+              </div>
+            )}
             <FormationAudioPlayer />
             {EBOOK_PARTS.map((part) => (
               <article
