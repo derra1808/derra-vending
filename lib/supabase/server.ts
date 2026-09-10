@@ -48,6 +48,7 @@ export async function getProfile() {
 
     if (!user) return { user: null, profile: null };
 
+    const paidFromAuth = user.user_metadata?.has_paid === true;
     const { data: profile } = await supabase
       .from("profiles")
       .select(
@@ -56,7 +57,20 @@ export async function getProfile() {
       .eq("id", user.id)
       .single();
 
-    return { user, profile };
+    return {
+      user,
+      profile: {
+        id: profile?.id ?? user.id,
+        email: profile?.email ?? user.email ?? null,
+        first_name:
+          profile?.first_name ?? user.user_metadata?.first_name ?? null,
+        last_name: profile?.last_name ?? user.user_metadata?.last_name ?? null,
+        full_name: profile?.full_name ?? user.user_metadata?.full_name ?? null,
+        address: profile?.address ?? user.user_metadata?.address ?? null,
+        has_paid: Boolean(profile?.has_paid) || paidFromAuth,
+        created_at: profile?.created_at ?? user.created_at,
+      },
+    };
   } catch {
     return { user: null, profile: null };
   }

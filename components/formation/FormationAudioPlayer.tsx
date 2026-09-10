@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play, SkipBack, SkipForward, Volume2 } from "lucide-react";
 import { FORMATION_AUDIO_TRACKS } from "@/lib/formation/audio-tracks";
-import { useFormationMediaSrc } from "./useFormationMediaSrc";
 
 function formatTime(sec: number) {
   if (!Number.isFinite(sec) || sec < 0) return "0:00";
@@ -23,21 +22,17 @@ export function FormationAudioPlayer() {
   const [ready, setReady] = useState(false);
 
   const track = FORMATION_AUDIO_TRACKS[index];
-  const { url: src, error: srcError } = useFormationMediaSrc("audio", track.id);
+  const src = `/api/formation/audio/${track.id}`;
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !src) return;
+    if (!audio) return;
     setReady(false);
     setError(null);
     setCurrent(0);
     setDuration(0);
     audio.load();
   }, [src]);
-
-  useEffect(() => {
-    if (srcError) setError(srcError);
-  }, [srcError]);
 
   useEffect(() => {
     return () => {
@@ -104,7 +99,7 @@ export function FormationAudioPlayer() {
     >
       <audio
         ref={audioRef}
-        src={src ?? undefined}
+        src={src}
         preload="metadata"
         onLoadedMetadata={(e) => {
           setDuration(e.currentTarget.duration || 0);

@@ -13,6 +13,8 @@ import {
   wantsSignedSrc,
 } from "@/lib/formation/media";
 
+export const dynamic = "force-dynamic";
+
 type BlobMeta = {
   pathname?: string;
   url?: string;

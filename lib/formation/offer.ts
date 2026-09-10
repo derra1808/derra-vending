@@ -56,8 +56,9 @@ export const VALUE_STACK = [
   },
   {
     id: "videos",
-    name: "Espace vidéo membre",
-    description: "Modules vidéo à regarder dans ton espace (mises à jour).",
+    name: "Vidéos exclusives — récoltes & chiffres",
+    description:
+      "On filme nos tournées, on compte la récolte, on te montre ce que gagne chaque distributeur.",
     value: 37,
   },
 ] as const;
@@ -93,7 +94,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Est-ce que j’ai les contacts fournisseurs ?",
-    a: "Dans la formation : où chercher (Facebook Marketplace, Leboncoin, Anibis…). Les contacts fournisseurs négociés d’Ibrahim sont dans l’appel Q&R.",
+    a: "Dans la formation : où chercher (Facebook Marketplace, Leboncoin, Anibis…) et comment choisir une machine d’occasion.",
   },
   {
     q: "Combien de temps pour lire et appliquer ?",
@@ -101,7 +102,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Y a-t-il des vidéos ?",
-    a: "Oui — espace vidéo dans ton espace membre (présentation, prospection, machines, tournée…). Mis à jour au fur et à mesure.",
+    a: "Oui — des vidéos exclusives dans l’espace membre. On filme les récoltes de nos distributeurs automatiques et on te montre les chiffres de chaque machine (tasses, encaissé). Ce que tu ne vois pas sur TikTok.",
   },
   {
     q: "Vous avez un Q&A type 50 ou 80 questions ?",
@@ -110,10 +111,6 @@ export const FAQ_ITEMS = [
   {
     q: "Et si ça ne me convient pas ?",
     a: "Garantie 14 jours : contacte-nous avec ton email d’achat. Produit numérique, accès immédiat.",
-  },
-  {
-    q: "Différence avec l’appel ?",
-    a: "Pack méthode (47 CHF) = ebook, bonus, audio, vidéos. Appel 100 CHF = 1h avec Ibrahim + accès à ses fournisseurs.",
   },
   {
     q: "Et le cadre légal ?",
@@ -126,60 +123,69 @@ export const BUSINESS_GOLD_RULE =
 
 export const MEMBER_VIDEOS = [
   {
+    id: "cynara-recolte",
+    title: "Récolte & chiffres — chantier Cynara",
+    description:
+      "On ouvre nos distributeurs, on compte la récolte, on te montre les vrais chiffres. Disponible maintenant.",
+    filename: "cynara-recolte.mp4",
+    duration: "≈ 9 min",
+    ready: true,
+  },
+  {
     id: "presentation",
     title: "Présentation — la méthode en 90 secondes",
     description: "Qui je suis, le modèle dépôt gratuit, ce que tu vas apprendre.",
     filename: "01-presentation.mp4",
-    duration: "≈ 2 min",
+    duration: "En attente",
+    ready: false,
   },
   {
     id: "part-1",
     title: "Partie 1 — Le business model (avatar HeyGen)",
     description: "Ibrahim t’explique le dépôt gratuit, les marges et la règle d’or.",
     filename: "part-1-heygen.mp4",
-    duration: "≈ 2 min",
+    duration: "≈ 3 min",
+    ready: true,
   },
   {
     id: "part-2",
     title: "Partie 2 — Prospection (avatar HeyGen)",
     description: "Entourage, porte-à-porte, réseaux, effet boule de neige.",
     filename: "part-2-heygen.mp4",
-    duration: "COMPLETE",
-  },
-  {
-    id: "cynara-recolte",
-    title: "Récolte & chiffres — chantier Cynara",
-    description: "Terrain réel : récolte et chiffres de nos machines sur un chantier.",
-    filename: "cynara-recolte.mp4",
-    duration: "≈ 9 min",
+    duration: "≈ 3 min",
+    ready: true,
   },
   {
     id: "business-model",
     title: "Partie 1 — Le business model",
     description: "0,85 CHF, marges, contrat, pourquoi le commerçant dit oui.",
     filename: "02-business-model.mp4",
-    duration: "À venir",
+    duration: "En attente",
+    ready: false,
   },
   {
     id: "prospection",
     title: "Partie 2 — Prospection",
     description: "Entourage, porte-à-porte, scripts et effet boule de neige.",
     filename: "03-prospection.mp4",
-    duration: "À venir",
+    duration: "En attente",
+    ready: false,
   },
   {
     id: "machines",
     title: "Partie 3 — Machines & fournisseurs",
     description: "Occasion vs neuf, Gaggia, consommables, Profital.",
     filename: "04-machines.mp4",
-    duration: "À venir",
+    duration: "En attente",
+    ready: false,
   },
   {
     id: "gestion",
     title: "Partie 4 — Gestion au quotidien",
     description: "Rinçage, tournée mensuelle, stock, entretien.",
     filename: "05-gestion.mp4",
-    duration: "À venir",
+    duration: "En attente",
+    ready: false,
   },
 ] as const;
 

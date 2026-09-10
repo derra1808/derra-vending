@@ -30,13 +30,6 @@ export async function getFormationMediaSignedUrl(
   const sb = mediaAdmin();
   if (!sb) return null;
   const path = `${kind}/${filename}`;
-  const folder = await sb.storage.from(BUCKET).list(kind, {
-    search: filename,
-    limit: 20,
-  });
-  if (folder.error || !folder.data?.some((f) => f.name === filename && (f.metadata?.size ?? 1) > 0)) {
-    return null;
-  }
   const { data, error } = await sb.storage
     .from(BUCKET)
     .createSignedUrl(path, 60 * 60 * 6);

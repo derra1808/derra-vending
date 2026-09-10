@@ -16,7 +16,6 @@ import { FormationAudioPlayer } from "@/components/formation/FormationAudioPlaye
 import { FormationQa50 } from "@/components/formation/FormationQa50";
 import { FormationSnackPlus } from "@/components/formation/FormationSnackPlus";
 import { FormationTopSpots } from "@/components/formation/FormationTopSpots";
-import { useFormationMediaSrc } from "@/components/formation/useFormationMediaSrc";
 
 type Tab = "formation" | "bonus" | "videos";
 
@@ -30,7 +29,6 @@ function PartMedia({
   title: string;
 }) {
   const avatar = PART_AVATAR_VIDEO[partId];
-  const { url: avatarSrc } = useFormationMediaSrc("video", avatar?.id ?? "");
   const [showImage, setShowImage] = useState(!avatar);
 
   if (avatar && !showImage) {
@@ -42,7 +40,7 @@ function PartMedia({
           playsInline
           preload="metadata"
           poster={image}
-          src={avatarSrc ?? undefined}
+          src={avatar ? `/api/formation/video/${avatar.id}` : undefined}
           onError={() => setShowImage(true)}
         >
           Ton navigateur ne lit pas la vidéo.
@@ -68,15 +66,10 @@ function PartMedia({
 }
 
 export function MemberDashboard({ displayName }: { displayName: string }) {
-  const featuredVideo = MEMBER_VIDEOS.find((v) => v.ready) ?? MEMBER_VIDEOS[0];
+  const readyVideos = MEMBER_VIDEOS.filter((v) => v.ready);
   const pendingVideos = MEMBER_VIDEOS.filter((v) => !v.ready);
-  const { url: featuredSrc, error: featuredSrcError } = useFormationMediaSrc(
-    "video",
-    featuredVideo.id
-  );
   const [tab, setTab] = useState<Tab>("formation");
   const [videoError, setVideoError] = useState<string | null>(null);
-  const videoMessage = videoError || featuredSrcError;
 
   const tabs: { id: Tab; label: string; icon: typeof BookOpen }[] = [
     { id: "formation", label: "Formation", icon: BookOpen },
@@ -243,86 +236,81 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
 
         {tab === "videos" && (
           <div className="mt-10 space-y-8">
-            <div>
-              <p className="formation-label">Disponible maintenant</p>
-              <h2 className="formation-title mt-3 text-2xl md:text-3xl">
-                {featuredVideo.title}
-              </h2>
-              <p className="formation-body mt-2 max-w-2xl text-sm md:text-base">
-                {featuredVideo.description}
-              </p>
-            </div>
-
-            <div
-              className="overflow-hidden"
-              style={{ border: "1px solid color-mix(in srgb, var(--d-gold) 55%, transparent)" }}
-            >
-              <div
-                className="flex items-center justify-between gap-3 px-4 py-3"
-                style={{
-                  background: "color-mix(in srgb, var(--d-gold) 14%, var(--d-night))",
-                  borderBottom: "1px solid color-mix(in srgb, var(--d-gold) 35%, transparent)",
-                }}
-              >
-                <span className="formation-label">Vidéo exclusive</span>
-                <span
-                  className="formation-label px-2 py-1 text-[10px]"
-                  style={{
-                    color: "var(--d-night)",
-                    background: "var(--d-gold)",
-                  }}
+            {readyVideos.map((video) => (
+              <div key={video.id}>
+                <div className="mb-4">
+                  <p className="formation-label">Disponible maintenant</p>
+                  <h2 className="formation-title mt-3 text-2xl md:text-3xl">{video.title}</h2>
+                  <p className="formation-body mt-2 max-w-2xl text-sm md:text-base">
+                    {video.description}
+                  </p>
+                </div>
+                <div
+                  className="overflow-hidden"
+                  style={{ border: "1px solid color-mix(in srgb, var(--d-gold) 55%, transparent)" }}
                 >
-                  Disponible
-                </span>
-              </div>
-              <video
-                key={featuredSrc || featuredVideo.id}
-                className="aspect-video w-full bg-black"
-                controls
-                playsInline
-                preload="metadata"
-                src={featuredSrc ?? undefined}
-                onError={() =>
-                  setVideoError("La vidéo ne se charge pas. Réessaie dans un instant.")
-                }
-                onLoadedData={() => setVideoError(null)}
-              />
-              {videoMessage && (
-                <p className="formation-body p-4 text-center text-sm" style={{ color: "var(--d-gold)" }}>
-                  {videoMessage}
-                </p>
-              )}
-              <p className="formation-body px-4 py-3 text-xs">
-                {featuredVideo.duration} · chantier réel · disponible
-              </p>
-            </div>
-
-            <div>
-              <h3 className="formation-title text-xl">Les prochaines vidéos</h3>
-              <p className="formation-body mt-2 text-sm">
-                En attente — elles arriveront ici. La récolte Cynara est déjà là.
-              </p>
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                {pendingVideos.map((v) => (
                   <div
-                    key={v.id}
-                    className="formation-card p-5 opacity-70"
-                    aria-disabled="true"
+                    className="flex items-center justify-between gap-3 px-4 py-3"
+                    style={{
+                      background: "color-mix(in srgb, var(--d-gold) 14%, var(--d-night))",
+                      borderBottom: "1px solid color-mix(in srgb, var(--d-gold) 35%, transparent)",
+                    }}
                   >
-                    <div className="flex items-start gap-3">
-                      <Clock className="mt-1 h-4 w-4 shrink-0" style={{ color: "var(--d-gold)" }} />
-                      <div>
-                        <p className="formation-label text-[10px]">En attente</p>
-                        <p className="formation-title mt-2 text-lg" style={{ color: "var(--d-night)" }}>
-                          {v.title}
-                        </p>
-                        <p className="formation-body mt-2 text-xs">{v.description}</p>
+                    <span className="formation-label">Vidéo exclusive</span>
+                    <span
+                      className="formation-label px-2 py-1 text-[10px]"
+                      style={{ color: "var(--d-night)", background: "var(--d-gold)" }}
+                    >
+                      Disponible
+                    </span>
+                  </div>
+                  <video
+                    className="aspect-video w-full bg-black"
+                    controls
+                    playsInline
+                    preload="metadata"
+                    src={`/api/formation/video/${video.id}`}
+                    onError={() =>
+                      setVideoError("La vidéo ne se charge pas. Réessaie dans un instant.")
+                    }
+                    onLoadedData={() => setVideoError(null)}
+                  />
+                  {videoError && (
+                    <p className="formation-body p-4 text-center text-sm" style={{ color: "var(--d-gold)" }}>
+                      {videoError}
+                    </p>
+                  )}
+                  <p className="formation-body px-4 py-3 text-xs">
+                    {video.duration} · disponible
+                  </p>
+                </div>
+              </div>
+            ))}
+
+            {pendingVideos.length > 0 && (
+              <div>
+                <h3 className="formation-title text-xl">Les prochaines vidéos</h3>
+                <p className="formation-body mt-2 text-sm">
+                  En attente — elles arriveront ici.
+                </p>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {pendingVideos.map((v) => (
+                    <div key={v.id} className="formation-card p-5 opacity-70" aria-disabled="true">
+                      <div className="flex items-start gap-3">
+                        <Clock className="mt-1 h-4 w-4 shrink-0" style={{ color: "var(--d-gold)" }} />
+                        <div>
+                          <p className="formation-label text-[10px]">En attente</p>
+                          <p className="formation-title mt-2 text-lg" style={{ color: "var(--d-night)" }}>
+                            {v.title}
+                          </p>
+                          <p className="formation-body mt-2 text-xs">{v.description}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 

@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FORMATION } from "@/lib/formation/content";
+import { createClient } from "@/lib/supabase/client";
 import { FormationLogo } from "./FormationLogo";
 
 export function FormationHeader({
@@ -14,14 +15,39 @@ export function FormationHeader({
   hasPaid?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [session, setSession] = useState({ signedIn, hasPaid });
 
-  const links = hasPaid
+  useEffect(() => {
+    setSession({ signedIn, hasPaid });
+  }, [signedIn, hasPaid]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+    void (async () => {
+      const { data } = await supabase.auth.getUser();
+      const user = data.user;
+      if (!user) return;
+      let paid = user.user_metadata?.has_paid === true;
+      if (!paid) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("has_paid")
+          .eq("id", user.id)
+          .maybeSingle();
+        paid = Boolean(profile?.has_paid);
+      }
+      setSession({ signedIn: true, hasPaid: paid });
+    })();
+  }, []);
+
+  const links = session.hasPaid
     ? [
         { href: "/formation/membre", label: "Espace membre" },
         { href: "/formation#faq", label: "FAQ" },
         { href: "/formation/logout?next=/formation", label: "Déconnexion" },
       ]
-    : signedIn
+    : session.signedIn
       ? [
           { href: "/formation#tarifs", label: "Offre" },
           { href: "/formation#faq", label: "FAQ" },
@@ -44,7 +70,7 @@ export function FormationHeader({
               {l.label}
             </Link>
           ))}
-          {hasPaid ? (
+          {session.hasPaid ? (
             <Link href="/formation/membre" className="formation-btn-primary px-5 py-2.5 text-[10px]">
               Formation
             </Link>
@@ -82,7 +108,7 @@ export function FormationHeader({
                 {l.label}
               </Link>
             ))}
-            {hasPaid ? (
+            {session.hasPaid ? (
               <Link
                 href="/formation/membre"
                 className="formation-btn-primary mt-2 text-center text-[10px]"
