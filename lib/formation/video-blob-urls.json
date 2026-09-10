@@ -3,21 +3,24 @@
     "filename": "cynara-recolte.mp4",
     "pathname": "formation/videos/cynara-recolte.mp4",
     "url": "https://sb6knjxnre2i7xcb.private.blob.vercel-storage.com/formation/videos/cynara-recolte.mp4",
-    "uploadedAt": "2026-09-10T22:48:56.137Z",
-    "bytes": 47473011
+    "uploadedAt": "2026-09-10T22:57:36.829Z",
+    "bytes": 239491012,
+    "quality": "original"
   },
   "part-1": {
     "filename": "part-1-heygen.mp4",
     "pathname": "formation/videos/part-1-heygen.mp4",
     "url": "https://sb6knjxnre2i7xcb.private.blob.vercel-storage.com/formation/videos/part-1-heygen.mp4",
-    "uploadedAt": "2026-09-10T22:49:03.149Z",
-    "bytes": 5767566
+    "uploadedAt": "2026-09-10T22:58:37.513Z",
+    "bytes": 73825304,
+    "quality": "original"
   },
   "part-2": {
     "filename": "part-2-heygen.mp4",
     "pathname": "formation/videos/part-2-heygen.mp4",
     "url": "https://sb6knjxnre2i7xcb.private.blob.vercel-storage.com/formation/videos/part-2-heygen.mp4",
-    "uploadedAt": "2026-09-10T22:49:09.422Z",
-    "bytes": 4486424
+    "uploadedAt": "2026-09-10T22:59:18.346Z",
+    "bytes": 53578289,
+    "quality": "original"
   }
 }
