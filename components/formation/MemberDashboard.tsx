@@ -41,7 +41,7 @@ function PartMedia({
           playsInline
           preload="metadata"
           poster={image}
-          src={formationVideoSrc(avatar.filename)}
+          src={`/api/formation/video/${avatar.id}`}
           onError={() => setShowImage(true)}
         >
           Ton navigateur ne lit pas la vidéo.
@@ -150,7 +150,7 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
                   controls
                   playsInline
                   preload="auto"
-                  src={formationVideoSrc(currentVideo.filename)}
+                  src={`/api/formation/video/${currentVideo.id}`}
                 />
                 <p className="formation-body px-4 py-3 text-sm">
                   <a
@@ -288,7 +288,7 @@ export function MemberDashboard({ displayName }: { displayName: string }) {
                     controls
                     playsInline
                     preload="auto"
-                    src={formationVideoSrc(currentVideo.filename)}
+                    src={`/api/formation/video/${currentVideo.id}`}
                     onError={() =>
                       setVideoError("La vidéo ne se charge pas. Réessaie dans un instant.")
                     }

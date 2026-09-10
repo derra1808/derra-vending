@@ -50,7 +50,7 @@ export function PaidMemberMedia() {
             controls
             playsInline
             preload="auto"
-            src={videoUrl}
+            src="/api/formation/video/cynara-recolte"
           />
         </div>
         <p className="formation-body mt-3 text-sm">
@@ -60,7 +60,7 @@ export function PaidMemberMedia() {
         </p>
         <div className="formation-card mt-6 p-4">
           <p className="formation-label">Audio — introduction</p>
-          <audio className="mt-3 w-full" controls preload="metadata" src={audioUrl} />
+          <audio className="mt-3 w-full" controls preload="metadata" src="/api/formation/audio/intro" />
         </div>
       </div>
     </section>
